@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Свадьба Виталия и Дарьи</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Georgia", serif;
+            background: linear-gradient(to bottom, #fff0f5, #ffffff);
+            color: #4a2c2a;
+            text-align: center;
+        }
+
+        header {
+            padding: 50px 20px 30px;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: normal;
+        }
+
+        .cats {
+            font-size: 40px;
+            margin: 20px 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .card::before,
+        .card::after {
+            content: "";
+            font-size: 40px;
+            position: absolute;
+            top: -20px;
+        }
+
+        .card::before {
+            left: -10px;
+        }
+
+        .card::after {
+            right: -10px;
+        }
+
+        .date {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .timer {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        footer {
+            margin: 40px 0;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Виталий & Дарья</h1>
+    <h2>Мы женимся 💍</h2>
+    <div class="cats">💕</div>
+</header>
+
+<div class="container">
+    <div class="card">
+        <p class="date">📅 20 июня 2026 года</p>
+
+        <p>
+            С большой радостью приглашаем вас разделить с нами
+            один из самых счастливых дней в нашей жизни.
+        </p>
+
+        <div class="timer" id="timer"></div>
+    </div>
+</div>
+
+<footer>
+    С любовью ❤️ Виталий и Дарья  ❤️
+</footer>
+
+<script>
+    const weddingDate = new Date("2026-06-20T00:00:00");
+
+function updateTimer() {
+    const diff = weddingDate - new Date();
+    if (diff <= 0) {
+        timer.innerText = "🎉 Сегодня свадьба!";
+        return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor(diff / 3600000) % 24;
+    const m = Math.floor(diff / 60000) % 60;
+    const s = Math.floor(diff / 1000) % 60;
+    timer.innerText = `⏳ ${d} д ${h} ч ${m} мин ${s} сек`;
+}
+setInterval(updateTimer, 1000);
+updateTimer();
+</script>
+
+</body>
+</html>
