@@ -264,14 +264,113 @@ li button:hover {
     }
 }
 
+.music-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    transition: transform .4s ease, box-shadow .4s ease;
+}
+
+.music-btn.playing {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(194,181,155,.6); }
+    70% { box-shadow: 0 0 0 20px rgba(194,181,155,0); }
+    100% { box-shadow: 0 0 0 0 rgba(194,181,155,0); }
+}
+
+
+.calendar-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 14px 24px;
+    border-radius: 20px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+}
+@media print {
+    .toggle,
+    .music-btn,
+    .menu,
+    iframe {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+.menu {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    padding: 12px;
+}
+.menu a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: var(--muted);
+}
+
+body.music-on .card {
+    transition: transform 1s ease;
+    transform: translateY(-4px);
+}
+
+.route-btn {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 12px 24px;
+    border-radius: 20px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+
 </style>
 </head>
 
 <body>
+
 <div id="lightbox">
     <img id="lightboxImg">
 </div>
+
 <div class="toggle" onclick="toggleTheme()">MODE</div>
+
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
+<button id="musicBtn" class="music-btn" onclick="toggleMusic()">
+    ♫
+</button>
+
+
 
 <header>
     <h1>Виталий Пыриков & Дарья Харитонова</h1>
@@ -281,13 +380,21 @@ li button:hover {
 
 <div class="container">
 
-<div class="card">
+
+<nav class="menu">
+  <a href="#day">День</a>
+  <a href="#plan">Расписание</a>
+  <a href="#place">Локации</a>
+  <a href="#photos">Фото</a>
+</nav>
+
+<div class="card",id="day">
     <h3>Свадебный день</h3>
     <p>Мы будем счастливы разделить этот особенный момент вместе с вами.</p>
     <div id="timer"></div>
 </div>
 
-<div class="card">
+<div class="card" id="plan">
     <h3>Расписание</h3>
     <div class="event"><span class="time">11:30</span>Сбор гостей</div>
     <div class="event"><span class="time">12:00</span>Регистрация брака</div>
@@ -310,6 +417,16 @@ li button:hover {
 </div>
 
 <div class="card">
+    <h3>Дресс-код</h3>
+    <p>
+        Мы будем рады, если вы поддержите атмосферу праздника 🤍<br><br>
+        <b>Цвета:</b> бежевый, шампань, серый, пастельные оттенки<br>
+        <b>Стиль:</b> элегантный, вечерний<br><br>
+        Главное — ваш комфорт и хорошее настроение ✨
+    </p>
+</div>
+
+<div class="card" id="place">
 <h3> Место регистрации</h3>
 <p><b>ул. Крупской, 44</b></p>
     <img 
@@ -321,8 +438,14 @@ li button:hover {
 <iframe 
   src="https://yandex.ru/map-widget/v1/?text=Территориальный%20отдел%20агентства%20ЗАГС%20Красноярского%20края%20по%20Октябрьскому%20району%20города%20Красноярска%2C%20ул.%20Крупской%2C%2044&z=16">
 </iframe>
+<a class="route-btn"
+   href="https://yandex.ru/maps/?rtext=~ул.%20Крупской%2044"
+   target="_blank">
+   🚗 Построить маршрут
+</a>
 </div>
 </div>
+
 
 <div class="card">
 <h3> Ресторан (празднования с родственниками)</h3>
@@ -334,7 +457,7 @@ li button:hover {
     >
 <div class="map">
 <iframe 
-  src="https://yandex.ru/map-widget/v1/?oid=5026303068&z=16">
+  src="https://yandex.ru/map-widget/v1/?text=Красноярск,%20ул.%20Ленина%20118А&z=16">
 </iframe>
 </div>
 </div>
@@ -355,17 +478,24 @@ li button:hover {
         </iframe>
     </div>
 </div>
-
-<div class="card">
-    <h3> Наши фото</h3>
+<div class="card" id="photos">
+    <h3> Мы Вас ждем!</h3>
     <div class="gallery">
         <img src="images1.jpg">
-        <img src="images2.jpg">
-        <img src="images3.jpg">
     </div>
 </div>
 
 <footer>С любовью ❤️ Виталий и Дарья</footer>
+
+<a href="https://calendar.google.com/calendar/render?action=TEMPLATE
+&text=Свадьба Виталия и Дарьи
+&dates=20260620T050000Z/20260620T150000Z
+&details=Мы будем рады вас видеть
+&location=Красноярск"
+target="_blank" class="calendar-btn">
+Добавить в календарь 📅
+</a>
+
 
 <script>
 /* Timer */
@@ -471,6 +601,39 @@ document.querySelectorAll(".gallery img").forEach(img => {
 lightbox.addEventListener("click", () => {
     lightbox.classList.remove("active");
 });
+
+
+const music = document.getElementById("bgMusic");
+const btn = document.getElementById("musicBtn");
+let playing = false;
+
+music.volume = 0;
+
+function toggleMusic() {
+    if (!playing) {
+        music.play();
+        fadeVolume(0, 1);
+        btn.classList.add("playing");
+    } else {
+        fadeVolume(1, 0, () => music.pause());
+        btn.classList.remove("playing");
+    }
+    playing = !playing;
+}
+
+function fadeVolume(from, to, done) {
+    let v = from;
+    const step = (to > from ? 0.02 : -0.02);
+    const interval = setInterval(() => {
+        v += step;
+        music.volume = Math.max(0, Math.min(1, v));
+        if ((step > 0 && v >= to) || (step < 0 && v <= to)) {
+            clearInterval(interval);
+            if (done) done();
+        }
+    }, 50);
+}
+
 
 </script>
 
