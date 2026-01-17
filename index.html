@@ -1,132 +1,478 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Свадьба Виталия и Дарьи</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: "Georgia", serif;
-            background: linear-gradient(to bottom, #fff0f5, #ffffff);
-            color: #4a2c2a;
-            text-align: center;
-        }
+<title>Виталий & Дарья — Свадьба</title>
 
-        header {
-            padding: 50px 20px 30px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #f7f6f4;
+    --card: #ffffff;
+    --text: #1f1f1f;
+    --muted: #8c8c8c;
+    --accent: #c2b59b;
+    --border: rgba(0,0,0,.06);
+    --shadow: 0 30px 60px rgba(0,0,0,.08);
+}
 
-        h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
+body.dark {
+    --bg: #121212;
+    --card: #1b1b1b;
+    --text: #f2f2f2;
+    --muted: #9a9a9a;
+    --accent: #bfa77a;
+    --border: rgba(255,255,255,.08);
+    --shadow: 0 40px 80px rgba(0,0,0,.6);
+}
 
-        h2 {
-            font-size: 24px;
-            font-weight: normal;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .cats {
-            font-size: 40px;
-            margin: 20px 0;
-        }
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, sans-serif;
+    text-align: center;
+    transition: background .4s, color .4s;
+}
 
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+.container {
+    max-width: 860px;
+    margin: auto;
+    padding: 40px 20px 80px;
+}
 
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
-        }
+header {
+    padding: 90px 20px 70px;
+}
 
-        .card::before,
-        .card::after {
-            content: "";
-            font-size: 40px;
-            position: absolute;
-            top: -20px;
-        }
+header h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 44px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0;
+}
 
-        .card::before {
-            left: -10px;
-        }
+header h2 {
+    font-weight: 300;
+    font-size: 18px;
+    color: var(--muted);
+    margin-top: 14px;
+}
 
-        .card::after {
-            right: -10px;
-        }
-        .titles {
-            font-size: 23px;
-            margin-bottom: 15px;
-        }
-        .date {
-            font-size: 22px;
-            margin-bottom: 15px;
-        }
+#inviteTitle {
+    margin-top: 24px;
+    font-size: 17px;
+    color: var(--muted);
+}
 
-        .timer {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-        }
+.card {
+    background: var(--card);
+    border-radius: 28px;
+    padding: 48px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
 
-        footer {
-            margin: 40px 0;
-            font-size: 14px;
-            color: #777;
-        }
-    </style>
+.card h3 {
+    font-family: "Playfair Display", serif;
+    font-weight: 400;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.card p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+.toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 13px;
+    letter-spacing: .1em;
+    padding: 10px 18px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+}
+
+/* Timer */
+#timer {
+    margin-top: 30px;
+    font-size: 22px;
+    letter-spacing: .15em;
+    color: var(--accent);
+}
+
+/* Timeline */
+.event {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+}
+
+.event:last-child {
+    border-bottom: none;
+}
+
+.time {
+    color: var(--accent);
+}
+
+/* RSVP */
+.rsvp input {
+    padding: 18px;
+    font-size: 16px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    width: 260px;
+    background: transparent;
+    color: var(--text);
+}
+
+.rsvp button {
+    padding: 18px 32px;
+    font-size: 14px;
+    letter-spacing: .1em;
+    border-radius: 18px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.rsvp-result {
+    margin-top: 20px;
+    font-size: 16px;
+    color: var(--accent);
+}
+
+/* Guests */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Map */
+.map {
+    height: 300px;
+    border-radius: 22px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.map iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Gallery */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+}
+
+.gallery img {
+    width: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    header h1 { font-size: 32px; }
+    .card { padding: 32px; }
+    .event { flex-direction: column; gap: 6px; }
+}
+li button {
+    margin-left: 10px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+}
+li button:hover {
+    color: #e36b6b;
+}
+/* Card animation */
+.card {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Lightbox */
+#lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 999;
+}
+
+#lightbox.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 24px;
+    box-shadow: 0 40px 80px rgba(0,0,0,.6);
+    animation: zoomIn 0.4s ease;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+</style>
 </head>
+
 <body>
+<div id="lightbox">
+    <img id="lightboxImg">
+</div>
+<div class="toggle" onclick="toggleTheme()">MODE</div>
 
 <header>
-    <h1>Виталий & Дарья</h1>
-    <h2>Мы женимся 💍</h2>
-    <div class="cats">💕</div>
+    <h1>Виталий Пыриков & Дарья Харитонова</h1>
+    <h2>20 июня 2026</h2>
+    <div id="inviteTitle"></div>
 </header>
 
 <div class="container">
-    <div class="card">
-        <p class="date">📅 20 июня 2026 года</p>
 
-        <p>
-            С большой радостью приглашаем вас разделить с нами
-            один из самых счастливых дней в нашей жизни.
-        </p>
+<div class="card">
+    <h3>Свадебный день</h3>
+    <p>Мы будем счастливы разделить этот особенный момент вместе с вами.</p>
+    <div id="timer"></div>
+</div>
 
-        <div class="timer" id="timer"></div>
+<div class="card">
+    <h3>Расписание</h3>
+    <div class="event"><span class="time">11:30</span>Сбор гостей</div>
+    <div class="event"><span class="time">12:00</span>Регистрация брака</div>
+    <div class="event"><span class="time">15:00</span>Ресторан (Родственники)</div>
+    <div class="event"><span class="time">19:00</span>Вечеринка (Друзья)</div>
+</div>
+
+<div class="card rsvp">
+    <h3>Подтвердите присутствие</h3>
+    <form onsubmit="addGuest(event)">
+        <input id="name" placeholder="Ваше имя" required>
+        <button type="submit">ПОДТВЕРДИТЬ</button>
+    </form>
+    <div id="msg" class="rsvp-result"></div>
+</div>
+
+<div class="card">
+    <h3>📋 Список гостей</h3>
+    <ul id="guestList"></ul>
+</div>
+
+<div class="card">
+<h3> Место регистрации</h3>
+<p><b>ул. Крупской, 44</b></p>
+    <img 
+        src="imagesmir.jpg" 
+        alt="Коттедж" 
+        style="width:100%; border-radius:20px; margin-bottom:15px;"
+    >
+<div class="map">
+<iframe 
+  src="https://yandex.ru/map-widget/v1/?text=Территориальный%20отдел%20агентства%20ЗАГС%20Красноярского%20края%20по%20Октябрьскому%20району%20города%20Красноярска%2C%20ул.%20Крупской%2C%2044&z=16">
+</iframe>
+</div>
+</div>
+
+<div class="card">
+<h3> Ресторан (празднования с родственниками)</h3>
+<p><b>ул. Ленина, 118А</b></p>
+    <img 
+        src="imagesrest.jpg" 
+        alt="Ресторан" 
+        style="width:100%; border-radius:20px; margin-bottom:15px;"
+    >
+<div class="map">
+<iframe 
+  src="https://yandex.ru/map-widget/v1/?oid=5026303068&z=16">
+</iframe>
+</div>
+</div>
+
+<div class="card">
+    <h3> Коттедж (вечеринка с друзьями)</h3>
+    <p><b>г. Красноярск, ул. Елены Стасовой, 75</b></p>
+
+    <img 
+        src="imagescottage.jpg" 
+        alt="Коттедж" 
+        style="width:100%; border-radius:20px; margin-bottom:15px;"
+    >
+
+    <div class="map">
+        <iframe 
+            src="https://yandex.ru/map-widget/v1/?text=г.%20Красноярск,%20ул.%20Елены%20Стасовой%2075&z=16">
+        </iframe>
     </div>
 </div>
 
-<footer>
-    С любовью ❤️ Виталий и Дарья  ❤️
-</footer>
+<div class="card">
+    <h3> Наши фото</h3>
+    <div class="gallery">
+        <img src="images1.jpg">
+        <img src="images2.jpg">
+        <img src="images3.jpg">
+    </div>
+</div>
+
+<footer>С любовью ❤️ Виталий и Дарья</footer>
 
 <script>
-    const weddingDate = new Date("2026-06-20T00:00:00");
+/* Timer */
+const weddingDate = new Date("2026-06-20T00:00:00+07:00");
+const timer = document.getElementById("timer");
 
 function updateTimer() {
-    const diff = weddingDate - new Date();
-    if (diff <= 0) {
-        timer.innerText = "🎉 Сегодня свадьба!";
+    const d = weddingDate - new Date();
+
+    if (d <= 0) {
+        timer.innerText = "Сегодня наш день 💍";
         return;
     }
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor(diff / 3600000) % 24;
-    const m = Math.floor(diff / 60000) % 60;
-    const s = Math.floor(diff / 1000) % 60;
-    timer.innerText = `⏳ ${d} д ${h} ч ${m} мин ${s} сек`;
+
+    const days = Math.floor(d / 86400000);
+
+    timer.innerText = `${days} ДНЕЙ ДО СОБЫТИЯ`;
 }
+
+updateTimer();              // ← МГНОВЕННО
 setInterval(updateTimer, 1000);
-updateTimer();
+
+/* Guests */
+let guests=JSON.parse(localStorage.getItem("guests")||"[]");
+const list=document.getElementById("guestList");
+function render(){
+    list.innerHTML="";
+    guests.forEach((g,i)=>{
+        list.innerHTML+=`<li>${g}<button onclick="removeGuest(${i})">✖</button></li>`;
+    });
+    localStorage.setItem("guests",JSON.stringify(guests));
+}
+render();
+
+function addGuest(e){
+    e.preventDefault();
+    const input = document.getElementById("name");
+    const name = input.value.trim();
+
+    if(name.length < 2){
+        document.getElementById("msg").innerText = "Введите имя 🙏";
+        return;
+    }
+
+    if(guests.includes(name)){
+        document.getElementById("msg").innerText =
+            `💫 ${name}, вы уже есть в списке`;
+        return;
+    }
+
+    guests.push(name);
+    render();
+
+    document.getElementById("msg").innerText =
+        `💖 Спасибо, ${name}! Мы будем рады вас видеть.`;
+
+    e.target.reset();
+}
+
+function removeGuest(i){
+    guests.splice(i,1); render();
+}
+
+/* Theme */
+function toggleTheme(){
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme",document.body.classList.contains("dark"));
+}
+if(localStorage.getItem("theme")==="true")document.body.classList.add("dark");
+
+/* Personal invite */
+const p=new URLSearchParams(location.search).get("guest");
+if(p){
+    document.getElementById("name").value=p;
+    document.getElementById("inviteTitle").innerText=`Дорогой(ая) ${p}, ждём вас ❤️`;
+}
+/* Card reveal on scroll */
+const cards = document.querySelectorAll(".card");
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+        }
+    });
+}, {
+    threshold: 0.15
+});
+
+cards.forEach(card => observer.observe(card));
+/* Gallery lightbox */
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+
+document.querySelectorAll(".gallery img").forEach(img => {
+    img.addEventListener("click", () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add("active");
+    });
+});
+
+lightbox.addEventListener("click", () => {
+    lightbox.classList.remove("active");
+});
+
 </script>
 
 </body>
 </html>
-
