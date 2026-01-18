@@ -111,7 +111,7 @@ header h2 {
 #timer {
     margin-top: 30px;
     font-size: 22px;
-    letter-spacing: .15em;
+    letter-spacing: .05em;
     color: var(--accent);
 }
 
@@ -457,13 +457,13 @@ body.dark::before {
 
 
 <nav class="menu">
+  <a href="#day">День</a>
   <a href="#plan">Расписание</a>
-  <a href="#Dress">Дресс-код</a>
   <a href="#place">Локации</a>
   <a href="#photos">Фото</a>
 </nav>
 
-<div class="card">
+<div class="card" id="day">
     <h3>Свадебный день</h3>
     <p>Мы будем счастливы разделить этот особенный момент вместе с вами.</p>
     <div id="timer"></div>
@@ -498,7 +498,7 @@ body.dark::before {
   <ul id="guests"></ul>
 </div>
 
-<div class="card" id="Dress">
+<div class="card">
     <h3>Дресс-код</h3>
     <p>
         Мы будем рады, если вы поддержите атмосферу праздника 🤍<br><br>
@@ -691,30 +691,47 @@ form.addEventListener("submit", e => {
   }, 800);
 });
 
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRmS64o2oYizZamcsBO4zdZ8DjUrMfD8cjKUS-q8DMlbxAcm4nrcvskKcbamx7gC0dr2c8N9BsGV1Vr/pub?gid=53254085&single=true&output=csv")
-  .then(res => res.text())
-  .then(text => {
-    const list = document.getElementById("guests");
-    const rows = text.split("\n").slice(1).filter(r => r.trim() !== ""); // пропускаем заголовки и пустые
-    list.innerHTML = "";
+const CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmS64o2oYizZamcsBO4zdZ8DjUrMfD8cjKUS-q8DMlbxAcm4nrcvskKcbamx7gC0dr2c8N9BsGV1Vr/pub?gid=53254085&single=true&output=csv";
 
-    if (!rows.length) {
-      list.innerHTML = "<li>Пока никто не подтвердил участие 🤍</li>";
-      return;
-    }
+function loadGuests() {
+  fetch(CSV_URL + "&_=" + Date.now(), { cache: "no-store" })
+    .then(res => res.text())
+    .then(text => {
+      const list = document.getElementById("guests");
 
-    rows.forEach((row, i) => {
-      const cells = row.split(",");
-      let name = cells[1]?.replace(/^"|"$/g, "").trim(); // убираем кавычки и пробелы
-      if (name) {
-        const li = document.createElement("li");
-        li.textContent = name;
-        li.style.animationDelay = `${i*0.05}s`;
-        list.appendChild(li);
+      // ❗️ВАЖНО: полностью очищаем список
+      list.innerHTML = "";
+
+      const rows = text
+        .split("\n")
+        .slice(1)
+        .map(r => r.trim())
+        .filter(Boolean);
+
+      if (!rows.length) {
+        list.innerHTML = "<li>Пока никто не подтвердил участие 🤍</li>";
+        return;
       }
+
+      rows.forEach((row, i) => {
+        const cells = row.split(",");
+        const name = cells[1]?.replace(/^"|"$/g, "").trim();
+
+        if (name) {
+          const li = document.createElement("li");
+          li.textContent = name;
+          li.style.animationDelay = `${i * 0.05}s`;
+          list.appendChild(li);
+        }
+      });
+    })
+    .catch(err => {
+      console.error("Ошибка загрузки гостей:", err);
     });
-  })
-  .catch(err => console.error("Ожидаем гостей:", err));
+}
+loadGuests();
+setInterval(loadGuests, 30000);
 
 
 
