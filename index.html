@@ -427,11 +427,56 @@ body.dark::before {
     }
 }
 
+/* Letter overlay */
+#letterOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(247,246,244,0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+body.dark #letterOverlay {
+    background: rgba(18,18,18,0.96);
+}
+
+#letterOverlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.letter {
+    max-width: 520px;
+    padding: 50px;
+    border-radius: 28px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    font-family: "Playfair Display", serif;
+    font-size: 22px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+#letterText {
+    white-space: pre-wrap;
+}
+
 
 </style>
 </head>
 
 <body>
+<div id="letterOverlay">
+  <div class="letter">
+    <p id="letterText"></p>
+  </div>
+</div>
 
 <div id="lightbox">
     <img id="lightboxImg">
@@ -731,8 +776,38 @@ function loadGuests() {
     });
 }
 loadGuests();
-setInterval(loadGuests, 30000);
+setInterval(loadGuests, 90000);
 
+/* Personal letter */
+const guestName = new URLSearchParams(location.search).get("guest");
+
+if (guestName) {
+    const overlay = document.getElementById("letterOverlay");
+    const textEl  = document.getElementById("letterText");
+
+    const letter = `Дорог${guestName.endsWith("а") ? "ая" : "ой"} ${guestName},
+
+мы с радостью приглашаем вас
+разделить с нами
+самый важный день в нашей жизни 🤍
+
+С любовью,
+Виталий и Дарья`;
+
+    let i = 0;
+    overlay.classList.add("active");
+
+    const typing = setInterval(() => {
+        textEl.textContent += letter[i];
+        i++;
+        if (i >= letter.length) {
+            clearInterval(typing);
+            setTimeout(() => {
+                overlay.classList.remove("active");
+            }, 2000);
+        }
+    }, 40);
+}
 
 
 </script>
