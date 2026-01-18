@@ -218,13 +218,15 @@ li button:hover {
 /* Card animation */
 .card {
     opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transform: translateY(60px) scale(0.98);
+    transition:
+        opacity 1.2s cubic-bezier(.2,.8,.2,1),
+        transform 1.2s cubic-bezier(.2,.8,.2,1);
 }
 
 .card.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 /* Lightbox */
 #lightbox {
@@ -353,6 +355,78 @@ body.music-on .card {
     font-size: 14px;
 }
 
+footer {
+    margin-top: 60px;
+    font-size: 14px;
+    color: var(--muted);
+    opacity: .8;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        linear-gradient(
+            rgba(247,246,244,.88),
+            rgba(247,246,244,.92)
+        ),
+        url("rings-bg.jpg") center / cover no-repeat;
+    z-index: -1;
+    transform: scale(1.05);
+    transition: transform 1.5s ease;
+}
+
+body.dark::before {
+    background:
+        linear-gradient(
+            rgba(18,18,18,.85),
+            rgba(18,18,18,.9)
+        ),
+        url("rings-bg.jpg") center / cover no-repeat;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    transition: transform .6s cubic-bezier(.2,.8,.2,1);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        linear-gradient(
+            rgba(247,246,244,.88),
+            rgba(247,246,244,.92)
+        ),
+        url("rings-bg.jpg") center / cover no-repeat;
+    z-index: -1;
+    transform: scale(1.05);
+}
+
+body.dark::before {
+    background:
+        linear-gradient(
+            rgba(18,18,18,.85),
+            rgba(18,18,18,.92)
+        ),
+        url("images/rings-bg.jpg") center / cover no-repeat;
+}
+
+#guests li {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn .6s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 
 </style>
 </head>
@@ -383,13 +457,13 @@ body.music-on .card {
 
 
 <nav class="menu">
-  <a href="#day">День</a>
   <a href="#plan">Расписание</a>
+  <a href="#Dress">Дресс-код</a>
   <a href="#place">Локации</a>
   <a href="#photos">Фото</a>
 </nav>
 
-<div class="card",id="day">
+<div class="card">
     <h3>Свадебный день</h3>
     <p>Мы будем счастливы разделить этот особенный момент вместе с вами.</p>
     <div id="timer"></div>
@@ -404,20 +478,27 @@ body.music-on .card {
 </div>
 
 <div class="card rsvp">
-    <h3>Подтвердите присутствие</h3>
-    <form onsubmit="addGuest(event)">
-        <input id="name" placeholder="Ваше имя" required>
-        <button type="submit">ПОДТВЕРДИТЬ</button>
-    </form>
-    <div id="msg" class="rsvp-result"></div>
+  <h3>Подтвердите присутствие</h3>
+  <form id="rsvpForm">
+<input
+  id="name"
+  name="entry.1249449313"
+  placeholder="Ваше ФИО"
+  minlength="3"
+  required
+>
+    <button type="submit">ПОДТВЕРДИТЬ</button>
+  </form>
+
+  <div id="msg" class="rsvp-result"></div>
 </div>
 
 <div class="card">
-    <h3>📋 Список гостей</h3>
-    <ul id="guestList"></ul>
+  <h3>Наши гости🤍</h3>
+  <ul id="guests"></ul>
 </div>
 
-<div class="card">
+<div class="card" id="Dress">
     <h3>Дресс-код</h3>
     <p>
         Мы будем рады, если вы поддержите атмосферу праздника 🤍<br><br>
@@ -465,7 +546,7 @@ body.music-on .card {
 
 <div class="card">
     <h3> Коттедж (вечеринка с друзьями)</h3>
-    <p><b>г. Красноярск, ул. Елены Стасовой, 75</b></p>
+    <p><b> ул. Елены Стасовой, 75</b></p>
 
     <img 
         src="imagescottage.jpg" 
@@ -500,65 +581,18 @@ target="_blank" class="calendar-btn">
 
 <script>
 /* Timer */
-const weddingDate = new Date("2026-06-20T00:00:00+07:00");
+const weddingDate = new Date("2026-06-20T00:00:00");
 const timer = document.getElementById("timer");
-
-function updateTimer() {
-    const d = weddingDate - new Date();
-
-    if (d <= 0) {
-        timer.innerText = "Сегодня наш день 💍";
-        return;
-    }
-
-    const days = Math.floor(d / 86400000);
-
-    timer.innerText = `${days} ДНЕЙ ДО СОБЫТИЯ`;
+function updateTimer(){
+    const diff = weddingDate - new Date();
+    if(diff<=0){ timer.innerText="🎉 Сегодня свадьба!"; return;}
+    const d=Math.floor(diff/86400000);
+    const h=Math.floor(diff/3600000)%24;
+    const m=Math.floor(diff/60000)%60;
+    const s=Math.floor(diff/1000)%60;
+    timer.innerText=` ${d} д ${h} ч ${m} мин ${s} сек`;
 }
-
-updateTimer();              // ← МГНОВЕННО
-setInterval(updateTimer, 1000);
-
-/* Guests */
-let guests=JSON.parse(localStorage.getItem("guests")||"[]");
-const list=document.getElementById("guestList");
-function render(){
-    list.innerHTML="";
-    guests.forEach((g,i)=>{
-        list.innerHTML+=`<li>${g}<button onclick="removeGuest(${i})">✖</button></li>`;
-    });
-    localStorage.setItem("guests",JSON.stringify(guests));
-}
-render();
-
-function addGuest(e){
-    e.preventDefault();
-    const input = document.getElementById("name");
-    const name = input.value.trim();
-
-    if(name.length < 2){
-        document.getElementById("msg").innerText = "Введите имя 🙏";
-        return;
-    }
-
-    if(guests.includes(name)){
-        document.getElementById("msg").innerText =
-            `💫 ${name}, вы уже есть в списке`;
-        return;
-    }
-
-    guests.push(name);
-    render();
-
-    document.getElementById("msg").innerText =
-        `💖 Спасибо, ${name}! Мы будем рады вас видеть.`;
-
-    e.target.reset();
-}
-
-function removeGuest(i){
-    guests.splice(i,1); render();
-}
+setInterval(updateTimer,1000); updateTimer();
 
 /* Theme */
 function toggleTheme(){
@@ -634,6 +668,54 @@ function fadeVolume(from, to, done) {
         }
     }, 50);
 }
+
+const form = document.getElementById("rsvpForm");
+const msg  = document.getElementById("msg");
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  msg.innerText = "⏳ Отправляем...";
+
+  fetch(
+    "https://docs.google.com/forms/d/e/1FAIpQLScQ7b9UriuQOkJO8WNvITRnPmjQ_QWfjJQ81km5U0FsHAdrBg/formResponse",
+    {
+      method: "POST",
+      mode: "no-cors",
+      body: new FormData(form)
+    }
+  );
+
+  setTimeout(() => {
+    msg.innerText = "💖 Спасибо! Мы будем рады вас видеть.";
+    form.reset();
+  }, 800);
+});
+
+fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRmS64o2oYizZamcsBO4zdZ8DjUrMfD8cjKUS-q8DMlbxAcm4nrcvskKcbamx7gC0dr2c8N9BsGV1Vr/pub?gid=53254085&single=true&output=csv")
+  .then(res => res.text())
+  .then(text => {
+    const list = document.getElementById("guests");
+    const rows = text.split("\n").slice(1).filter(r => r.trim() !== ""); // пропускаем заголовки и пустые
+    list.innerHTML = "";
+
+    if (!rows.length) {
+      list.innerHTML = "<li>Пока никто не подтвердил участие 🤍</li>";
+      return;
+    }
+
+    rows.forEach((row, i) => {
+      const cells = row.split(",");
+      let name = cells[1]?.replace(/^"|"$/g, "").trim(); // убираем кавычки и пробелы
+      if (name) {
+        const li = document.createElement("li");
+        li.textContent = name;
+        li.style.animationDelay = `${i*0.05}s`;
+        list.appendChild(li);
+      }
+    });
+  })
+  .catch(err => console.error("Ожидаем гостей:", err));
+
 
 
 </script>
