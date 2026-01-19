@@ -528,14 +528,14 @@ body.dark .invite-card {
     background: var(--accent);
     color: #fff;
 }
-
-
-</style>
 <meta property="og:title" content="Свадьба Виталия и Дарьи">
 <meta property="og:description" content="Мы будем рады разделить с вами наш особенный день">
 <meta property="og:image" content="https://ВАШ_САЙТ/images/preview.jpg">
 <meta property="og:type" content="website">
 <meta name="description" content="Приглашение на свадьбу Виталия и Дарьи — 20 июня 2026">
+
+
+</style>
 
 
 </head>
@@ -735,10 +735,10 @@ function toggleTheme(){
 if(localStorage.getItem("theme")==="true")document.body.classList.add("dark");
 
 /* Personal invite */
-const guest=new URLSearchParams(location.search).get("guest");
-if(guest){
-    document.getElementById("name").value=guest;
-    document.getElementById("inviteTitle").innerText=`Дорогой(ая) ${guest}, ждём вас ❤️`;
+const p=new URLSearchParams(location.search).get("guest");
+if(p){
+    document.getElementById("name").value=p;
+    document.getElementById("inviteTitle").innerText=`Дорогой(ая) ${p}, ждём вас ❤️`;
 }
 /* Card reveal on scroll */
 const cards = document.querySelectorAll(".card");
@@ -821,7 +821,7 @@ form.addEventListener("submit", e => {
  setTimeout(() => {
   msg.innerText = "💖 Спасибо! Мы будем рады вас видеть.";
   document.getElementById("name").value = "";
-}, 800);
+}, 800);});
 
 
 const CSV_URL =
@@ -868,7 +868,7 @@ setInterval(loadGuests, 90000);
 
 /* Premium personal invite */
 const seenInvite = localStorage.getItem("inviteSeen");
-
+const guest=new URLSearchParams(location.search).get("guest");
 if (guest && !seenInvite) {
     const overlay = document.getElementById("inviteOverlay");
     const nameEl  = document.getElementById("inviteName");
@@ -886,9 +886,6 @@ if (guest && !seenInvite) {
     });
 }
 
-if (!guest) {
-    localStorage.removeItem("inviteSeen");
-}
 
 </script>
 
