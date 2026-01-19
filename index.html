@@ -419,10 +419,7 @@ body.dark::before {
     transition: opacity 1s ease;
 }
 
-#inviteOverlay.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+
 
 .invite-card {
     position: relative;
@@ -528,11 +525,6 @@ body.dark .invite-card {
     background: var(--accent);
     color: #fff;
 }
-<meta property="og:title" content="Свадьба Виталия и Дарьи">
-<meta property="og:description" content="Мы будем рады разделить с вами наш особенный день">
-<meta property="og:image" content="https://ВАШ_САЙТ/images/preview.jpg">
-<meta property="og:type" content="website">
-<meta name="description" content="Приглашение на свадьбу Виталия и Дарьи — 20 июня 2026">
 
 /* Envelope animation */
 .envelope {
@@ -611,7 +603,165 @@ body.dark .invite-card {
 }
 
 
+/* RSVP SUCCESS OVERLAY */
+.rsvp-success {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(8px);
+    border-radius: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.02);
+    transition: opacity .8s ease, transform .8s ease;
+}
+
+body.dark .rsvp-success {
+    background: rgba(20,20,20,.85);
+}
+
+.rsvp-success.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+/* Ring */
+.success-ring {
+    position: relative;
+    width: 110px;
+    height: 110px;
+}
+
+.success-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.success-ring circle {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 4;
+    stroke-dasharray: 327;
+    stroke-dashoffset: 327;
+    animation: ringDraw 1.4s cubic-bezier(.4,0,.2,1) forwards;
+}
+
+@keyframes ringDraw {
+    to { stroke-dashoffset: 0; }
+}
+
+/* Check */
+.success-check {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 46px;
+    color: var(--accent);
+    opacity: 0;
+    transform: scale(.6);
+    animation: checkPop .6s ease forwards;
+    animation-delay: 1.2s;
+}
+
+@keyframes checkPop {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Text */
+.success-text h4 {
+    font-family: "Playfair Display", serif;
+    font-size: 22px;
+    margin: 0;
+}
+
+.success-text p {
+    margin: 6px 0 0;
+    font-size: 15px;
+    color: var(--muted);
+}
+
+/* Button sink */
+.rsvp button.loading {
+    pointer-events: none;
+    opacity: .6;
+    transform: translateY(2px) scale(.96);
+    transition: transform .4s ease, opacity .4s ease;
+}
+
+
+/* GOLD DUST */
+.gold-dust {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.gold-dust span {
+    position: absolute;
+    bottom: -10px;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, #d6c59a 0%, rgba(214,197,154,0.2) 60%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    animation: dustFloat linear infinite;
+}
+
+@keyframes dustFloat {
+    0% {
+        transform: translateY(0) scale(0.6);
+        opacity: 0;
+    }
+    20% {
+        opacity: .6;
+    }
+    100% {
+        transform: translateY(-140%) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* LETTER SEND */
+.rsvp.sending form {
+    animation: letterSend 1.2s cubic-bezier(.4,0,.2,1) forwards;
+}
+
+@keyframes letterSend {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    60% {
+        transform: translateY(-30px) scale(0.95);
+        opacity: .9;
+    }
+    100% {
+        transform: translateY(-120px) scale(0.85);
+        opacity: 0;
+    }
+}
+
+
 </style>
+
+<meta property="og:title" content="Свадьба Виталия и Дарьи">
+<meta property="og:description" content="Мы будем рады разделить с вами наш особенный день">
+<meta property="og:image" content="https://ВАШ_САЙТ/images/preview.jpg">
+<meta property="og:type" content="website">
+<meta name="description" content="Приглашение на свадьбу Виталия и Дарьи — 20 июня 2026">
 
 
 </head>
@@ -699,6 +849,21 @@ body.dark .invite-card {
 >
     <button type="submit">ПОДТВЕРДИТЬ</button>
   </form>
+
+<div class="rsvp-success" id="rsvpSuccess">
+<div class="gold-dust" id="goldDust"></div>
+  <div class="success-ring">
+    <svg viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="52"/>
+    </svg>
+    <div class="success-check">✓</div>
+  </div>
+
+  <div class="success-text">
+    <h4>Подтверждение получено</h4>
+    <p>Мы с нетерпением ждём встречи 🤍</p>
+  </div>
+</div>
 
   <div id="msg" class="rsvp-result"></div>
 </div>
@@ -884,9 +1049,17 @@ function fadeVolume(from, to, done) {
 const form = document.getElementById("rsvpForm");
 const msg  = document.getElementById("msg");
 
+
 form.addEventListener("submit", e => {
   e.preventDefault();
-  msg.innerText = "⏳ Отправляем...";
+
+  const btn = form.querySelector("button");
+  const success = document.getElementById("rsvpSuccess");
+const card = document.querySelector(".card.rsvp");
+card.classList.add("sending");
+
+  btn.classList.add("loading");
+  msg.innerText = "";
 
   fetch(
     "https://docs.google.com/forms/d/e/1FAIpQLScQ7b9UriuQOkJO8WNvITRnPmjQ_QWfjJQ81km5U0FsHAdrBg/formResponse",
@@ -896,11 +1069,29 @@ form.addEventListener("submit", e => {
       body: new FormData(form)
     }
   );
+createGoldDust();
 
- setTimeout(() => {
-  msg.innerText = "💖 Спасибо! Мы будем рады вас видеть.";
-  document.getElementById("name").value = "";
-}, 800);});
+  setTimeout(() => {
+
+  }, 400);
+
+  setTimeout(() => {
+    success.classList.add("active");
+  }, 700);
+});
+
+function createGoldDust() {
+  const dust = document.getElementById("goldDust");
+  dust.innerHTML = "";
+
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement("span");
+    p.style.left = Math.random() * 100 + "%";
+    p.style.animationDuration = 6 + Math.random() * 6 + "s";
+    p.style.animationDelay = Math.random() * 2 + "s";
+    dust.appendChild(p);
+  }
+}
 
 
 const CSV_URL =
