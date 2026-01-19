@@ -467,11 +467,141 @@ body.dark #letterOverlay {
     white-space: pre-wrap;
 }
 
+/* Premium Invite Card */
+#inviteOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+#inviteOverlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.invite-card {
+    position: relative;
+    width: min(92%, 520px);
+    background: linear-gradient(180deg, #fff, #faf9f7);
+    border-radius: 36px;
+    box-shadow: 0 60px 120px rgba(0,0,0,.25);
+    overflow: hidden;
+    animation: cardEnter 1.2s cubic-bezier(.2,.8,.2,1);
+}
+
+body.dark .invite-card {
+    background: linear-gradient(180deg, #1b1b1b, #141414);
+}
+
+@keyframes cardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(60px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.invite-decor {
+    height: 140px;
+    background:
+        linear-gradient(
+            rgba(0,0,0,.15),
+            rgba(0,0,0,.05)
+        ),
+        url("rings-bg.jpg") center / cover no-repeat;
+}
+
+.invite-content {
+    padding: 48px 40px 44px;
+    text-align: center;
+}
+
+.invite-eyebrow {
+    font-size: 12px;
+    letter-spacing: .25em;
+    color: var(--muted);
+    text-transform: uppercase;
+}
+
+.invite-content h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 32px;
+    margin: 20px 0 14px;
+}
+
+.invite-text {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+.invite-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 26px 0 34px;
+    font-size: 14px;
+    color: var(--accent);
+}
+
+#enterSite {
+    padding: 16px 36px;
+    border-radius: 24px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px;
+    letter-spacing: .12em;
+    cursor: pointer;
+    box-shadow: 0 15px 40px rgba(194,181,155,.6);
+    transition: transform .4s ease, box-shadow .4s ease;
+}
+
+#enterSite:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 60px rgba(194,181,155,.75);
+}
+
 
 </style>
 </head>
 
 <body>
+<div id="inviteOverlay">
+  <div class="invite-card">
+    <div class="invite-decor"></div>
+
+    <div class="invite-content">
+      <span class="invite-eyebrow">Wedding Invitation</span>
+      <h1 id="inviteName"></h1>
+
+      <p class="invite-text">
+        Мы будем счастливы разделить с вами<br>
+        один из самых важных дней нашей жизни
+      </p>
+
+      <div class="invite-meta">
+        <span>20 июня 2026</span>
+        <span>Красноярск</span>
+      </div>
+
+      <button id="enterSite">Открыть приглашение</button>
+    </div>
+  </div>
+</div>
+
+
 <div id="letterOverlay">
   <div class="letter">
     <p id="letterText"></p>
@@ -806,7 +936,25 @@ if (guestName) {
                 overlay.classList.remove("active");
             }, 2000);
         }
-    }, 70);
+    }, 40);
+}
+/* Premium personal invite */
+const guest = new URLSearchParams(location.search).get("guest");
+
+if (guest) {
+    const overlay = document.getElementById("inviteOverlay");
+    const nameEl  = document.getElementById("inviteName");
+    const enter   = document.getElementById("enterSite");
+
+    const prefix = guest.endsWith("а") ? "Дорогая" : "Дорогой";
+    nameEl.textContent = `${prefix} ${guest}`;
+
+    overlay.classList.add("active");
+
+    enter.addEventListener("click", () => {
+        overlay.style.opacity = "0";
+        setTimeout(() => overlay.remove(), 900);
+    });
 }
 
 
@@ -814,4 +962,3 @@ if (guestName) {
 
 </body>
 </html>
-
