@@ -534,6 +534,82 @@ body.dark .invite-card {
 <meta property="og:type" content="website">
 <meta name="description" content="Приглашение на свадьбу Виталия и Дарьи — 20 июня 2026">
 
+/* Envelope animation */
+.envelope {
+    position: relative;
+    width: min(92%, 520px);
+    height: 340px;
+    background: #f6f2ec;
+    border-radius: 28px;
+    box-shadow: 0 60px 120px rgba(0,0,0,.35);
+    overflow: hidden;
+    cursor: pointer;
+    transform-style: preserve-3d;
+}
+
+.envelope-back {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #faf9f7, #f0ebe3);
+    z-index: 1;
+}
+
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(180deg, #e9e3d8, #dcd4c5);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top;
+    transition: transform 1.2s cubic-bezier(.2,.8,.2,1);
+    z-index: 3;
+}
+
+.envelope.open .envelope-flap {
+    transform: rotateX(-160deg);
+}
+
+.letter {
+    position: absolute;
+    left: 50%;
+    bottom: -220px;
+    transform: translateX(-50%);
+    width: 90%;
+    background: linear-gradient(180deg, #fff, #faf9f7);
+    border-radius: 26px;
+    padding: 40px 32px;
+    box-shadow: 0 40px 80px rgba(0,0,0,.25);
+    text-align: center;
+    transition: bottom 1.4s cubic-bezier(.2,.8,.2,1);
+    z-index: 2;
+}
+
+.envelope.open .letter {
+    bottom: 20px;
+}
+
+/* Overlay center */
+#inviteOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.6);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .8s ease;
+}
+
+#inviteOverlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 
 </style>
 
@@ -542,10 +618,12 @@ body.dark .invite-card {
 
 <body>
 <div id="inviteOverlay">
-  <div class="invite-card">
-    <div class="invite-decor"></div>
+  <div class="envelope" id="envelope">
+    <div class="envelope-back"></div>
 
-    <div class="invite-content">
+    <div class="envelope-flap"></div>
+
+    <div class="letter">
       <span class="invite-eyebrow">Wedding Invitation</span>
       <h1 id="inviteName"></h1>
 
@@ -562,6 +640,7 @@ body.dark .invite-card {
     </div>
   </div>
 </div>
+
 
 
 <div id="lightbox">
@@ -866,12 +945,14 @@ function loadGuests() {
 loadGuests();
 setInterval(loadGuests, 90000);
 
-/* Premium personal invite */
+/* Premium envelope invite */
 const seenInvite = localStorage.getItem("inviteSeen");
-const guest=new URLSearchParams(location.search).get("guest");
+const guest = new URLSearchParams(location.search).get("guest");
+
 if (guest && !seenInvite) {
     const overlay = document.getElementById("inviteOverlay");
     const nameEl  = document.getElementById("inviteName");
+    const envelope = document.getElementById("envelope");
     const enter   = document.getElementById("enterSite");
 
     const prefix = guest.endsWith("а") ? "Дорогая" : "Дорогой";
@@ -879,12 +960,18 @@ if (guest && !seenInvite) {
 
     overlay.classList.add("active");
 
-    enter.addEventListener("click", () => {
+    envelope.addEventListener("click", () => {
+        envelope.classList.add("open");
+    }, { once: true });
+
+    enter.addEventListener("click", e => {
+        e.stopPropagation();
         localStorage.setItem("inviteSeen", "true");
         overlay.style.opacity = "0";
         setTimeout(() => overlay.remove(), 900);
     });
 }
+
 
 
 </script>
