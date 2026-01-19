@@ -419,7 +419,10 @@ body.dark::before {
     transition: opacity 1s ease;
 }
 
-
+#inviteOverlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
 
 .invite-card {
     position: relative;
@@ -768,12 +771,10 @@ body.dark .rsvp-success {
 
 <body>
 <div id="inviteOverlay">
-  <div class="envelope" id="envelope">
-    <div class="envelope-back"></div>
+  <div class="invite-card">
+    <div class="invite-decor"></div>
 
-    <div class="envelope-flap"></div>
-
-    <div class="letter">
+    <div class="invite-content">
       <span class="invite-eyebrow">Wedding Invitation</span>
       <h1 id="inviteName"></h1>
 
@@ -1136,14 +1137,12 @@ function loadGuests() {
 loadGuests();
 setInterval(loadGuests, 90000);
 
-/* Premium envelope invite */
+/* Premium personal invite */
 const seenInvite = localStorage.getItem("inviteSeen");
-const guest = new URLSearchParams(location.search).get("guest");
-
+const guest=new URLSearchParams(location.search).get("guest");
 if (guest && !seenInvite) {
     const overlay = document.getElementById("inviteOverlay");
     const nameEl  = document.getElementById("inviteName");
-    const envelope = document.getElementById("envelope");
     const enter   = document.getElementById("enterSite");
 
     const prefix = guest.endsWith("а") ? "Дорогая" : "Дорогой";
@@ -1151,18 +1150,12 @@ if (guest && !seenInvite) {
 
     overlay.classList.add("active");
 
-    envelope.addEventListener("click", () => {
-        envelope.classList.add("open");
-    }, { once: true });
-
-    enter.addEventListener("click", e => {
-        e.stopPropagation();
+    enter.addEventListener("click", () => {
         localStorage.setItem("inviteSeen", "true");
         overlay.style.opacity = "0";
         setTimeout(() => overlay.remove(), 900);
     });
 }
-
 
 
 </script>
