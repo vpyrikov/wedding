@@ -362,29 +362,6 @@ footer {
     opacity: .8;
 }
 
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        linear-gradient(
-            rgba(247,246,244,.88),
-            rgba(247,246,244,.92)
-        ),
-        url("rings-bg.jpg") center / cover no-repeat;
-    z-index: -1;
-    transform: scale(1.05);
-    transition: transform 1.5s ease;
-}
-
-body.dark::before {
-    background:
-        linear-gradient(
-            rgba(18,18,18,.85),
-            rgba(18,18,18,.9)
-        ),
-        url("rings-bg.jpg") center / cover no-repeat;
-}
 
 .card:hover {
     transform: translateY(-6px);
@@ -425,46 +402,6 @@ body.dark::before {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* Letter overlay */
-#letterOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(247,246,244,0.96);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1s ease;
-}
-
-body.dark #letterOverlay {
-    background: rgba(18,18,18,0.96);
-}
-
-#letterOverlay.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.letter {
-    max-width: 520px;
-    padding: 50px;
-    border-radius: 28px;
-    background: var(--card);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    font-family: "Playfair Display", serif;
-    font-size: 22px;
-    line-height: 1.6;
-    text-align: center;
-}
-
-#letterText {
-    white-space: pre-wrap;
 }
 
 /* Premium Invite Card */
@@ -573,8 +510,34 @@ body.dark .invite-card {
     box-shadow: 0 25px 60px rgba(194,181,155,.75);
 }
 
+.gallery img {
+    transition: transform .6s ease, box-shadow .6s ease;
+}
+.gallery img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 30px 60px rgba(0,0,0,.25);
+}
+
+.menu {
+    position: sticky;
+    top: 10px;
+    z-index: 50;
+}
+
+::selection {
+    background: var(--accent);
+    color: #fff;
+}
+
 
 </style>
+<meta property="og:title" content="Свадьба Виталия и Дарьи">
+<meta property="og:description" content="Мы будем рады разделить с вами наш особенный день">
+<meta property="og:image" content="https://ВАШ_САЙТ/images/preview.jpg">
+<meta property="og:type" content="website">
+<meta name="description" content="Приглашение на свадьбу Виталия и Дарьи — 20 июня 2026">
+
+
 </head>
 
 <body>
@@ -593,7 +556,6 @@ body.dark .invite-card {
 
       <div class="invite-meta">
         <span>20 июня 2026</span>
-        <span>Красноярск</span>
       </div>
 
       <button id="enterSite">Открыть приглашение</button>
@@ -601,12 +563,6 @@ body.dark .invite-card {
   </div>
 </div>
 
-
-<div id="letterOverlay">
-  <div class="letter">
-    <p id="letterText"></p>
-  </div>
-</div>
 
 <div id="lightbox">
     <img id="lightboxImg">
@@ -733,6 +689,12 @@ body.dark .invite-card {
         <iframe 
             src="https://yandex.ru/map-widget/v1/?text=г.%20Красноярск,%20ул.%20Елены%20Стасовой%2075&z=16">
         </iframe>
+<a class="route-btn"
+href="https://yandex.ru/maps/?rtext=~ул.%20Елены%20Стасовой%2075"
+target="_blank">
+🚗 Построить маршрут
+</a>
+
     </div>
 </div>
 <div class="card" id="photos">
@@ -744,11 +706,7 @@ body.dark .invite-card {
 
 <footer>С любовью ❤️ Виталий и Дарья</footer>
 
-<a href="https://calendar.google.com/calendar/render?action=TEMPLATE
-&text=Свадьба Виталия и Дарьи
-&dates=20260620T050000Z/20260620T150000Z
-&details=Мы будем рады вас видеть
-&location=Красноярск"
+<a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба%20Виталия%20и%20Дарьи&dates=20260620T050000Z/20260620T150000Z&details=Мы%20будем%20рады%20вас%20видеть&location=Красноярск"
 target="_blank" class="calendar-btn">
 Добавить в календарь 📅
 </a>
@@ -777,10 +735,10 @@ function toggleTheme(){
 if(localStorage.getItem("theme")==="true")document.body.classList.add("dark");
 
 /* Personal invite */
-const p=new URLSearchParams(location.search).get("guest");
-if(p){
-    document.getElementById("name").value=p;
-    document.getElementById("inviteTitle").innerText=`Дорогой(ая) ${p}, ждём вас ❤️`;
+const guest=new URLSearchParams(location.search).get("guest");
+if(guest){
+    document.getElementById("name").value=guest;
+    document.getElementById("inviteTitle").innerText=`Дорогой(ая) ${guest}, ждём вас ❤️`;
 }
 /* Card reveal on scroll */
 const cards = document.querySelectorAll(".card");
@@ -860,11 +818,11 @@ form.addEventListener("submit", e => {
     }
   );
 
-  setTimeout(() => {
-    msg.innerText = "💖 Спасибо! Мы будем рады вас видеть.";
-    form.reset();
-  }, 800);
-});
+ setTimeout(() => {
+  msg.innerText = "💖 Спасибо! Мы будем рады вас видеть.";
+  document.getElementById("name").value = "";
+}, 800);
+
 
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmS64o2oYizZamcsBO4zdZ8DjUrMfD8cjKUS-q8DMlbxAcm4nrcvskKcbamx7gC0dr2c8N9BsGV1Vr/pub?gid=53254085&single=true&output=csv";
@@ -908,40 +866,10 @@ function loadGuests() {
 loadGuests();
 setInterval(loadGuests, 90000);
 
-/* Personal letter */
-const guestName = new URLSearchParams(location.search).get("guest");
-
-if (guestName) {
-    const overlay = document.getElementById("letterOverlay");
-    const textEl  = document.getElementById("letterText");
-
-    const letter = `Дорог${guestName.endsWith("а") ? "ая" : "ой"} ${guestName},
-
-мы с радостью приглашаем вас
-разделить с нами
-самый важный день в нашей жизни 🤍
-
-С любовью,
-Виталий и Дарья`;
-
-    let i = 0;
-    overlay.classList.add("active");
-
-    const typing = setInterval(() => {
-        textEl.textContent += letter[i];
-        i++;
-        if (i >= letter.length) {
-            clearInterval(typing);
-            setTimeout(() => {
-                overlay.classList.remove("active");
-            }, 2000);
-        }
-    }, 40);
-}
 /* Premium personal invite */
-const guest = new URLSearchParams(location.search).get("guest");
+const seenInvite = localStorage.getItem("inviteSeen");
 
-if (guest) {
+if (guest && !seenInvite) {
     const overlay = document.getElementById("inviteOverlay");
     const nameEl  = document.getElementById("inviteName");
     const enter   = document.getElementById("enterSite");
@@ -952,11 +880,15 @@ if (guest) {
     overlay.classList.add("active");
 
     enter.addEventListener("click", () => {
+        localStorage.setItem("inviteSeen", "true");
         overlay.style.opacity = "0";
         setTimeout(() => overlay.remove(), 900);
     });
 }
 
+if (!guest) {
+    localStorage.removeItem("inviteSeen");
+}
 
 </script>
 
