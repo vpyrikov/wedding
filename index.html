@@ -757,6 +757,172 @@ body.dark .rsvp-success {
     }
 }
 
+.childhood {
+    position: relative;
+    height: 460px;
+    margin-bottom: 120px;
+    perspective: 1200px;
+}
+
+/* Glow */
+.childhood::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(194,181,155,0.35), transparent 70%);
+    filter: blur(40px);
+}
+
+/* Фото */
+.polaroid {
+    position: absolute;
+    width: 240px;
+    background: #fff;
+    padding: 14px 14px 22px;
+    border-radius: 12px;
+    box-shadow: 0 40px 80px rgba(0,0,0,.25);
+
+    transform: translateY(80px) rotate(var(--rot)) scale(.9);
+    opacity: 0;
+
+    transition:
+        transform 1.2s cubic-bezier(.2,.8,.2,1),
+        opacity 1s ease,
+        box-shadow .5s ease;
+}
+
+/* Позиции */
+.polaroid.bride {
+    left: 8%;
+    top: 0;
+    --rot: -10deg;
+}
+
+.polaroid.groom {
+    right: 8%;
+    top: 140px;
+    --rot: 12deg;
+}
+
+/* Появление */
+.polaroid.visible {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--rot)) scale(1);
+}
+
+/* Hover (живость) */
+.polaroid:hover {
+    transform: translateY(-10px) rotate(0deg) scale(1.08);
+    box-shadow: 0 60px 120px rgba(0,0,0,.35);
+}
+
+/* Фото */
+.polaroid img {
+    width: 100%;
+    border-radius: 6px;
+}
+
+/* Текст */
+.polaroid p {
+    font-size: 13px;
+    margin-top: 10px;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: .6s ease;
+}
+
+.polaroid.visible p {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Календарь */
+.calendar {
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 320px;
+    margin: 0 auto;
+    background: var(--card);
+    margin: 40px auto 80px; /* добавили низ */
+}
+
+.calendar h4 {
+    font-family: "Playfair Display", serif;
+    margin-bottom: 20px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    font-size: 14px;
+}
+
+.calendar-grid div {
+    padding: 6px 0;
+}
+
+.heart {
+    position: relative;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.heart::after {
+    content: "❤";
+    position: absolute;
+    top: -10px;
+    right: -8px;
+    font-size: 12px;
+    color: #e36b6b;
+}
+
+.heart::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border: 1px solid rgba(227,107,107,0.4);
+    border-radius: 50%;
+}
+
+.love-note {
+    position: absolute;
+    font-family: "Playfair Display", serif;
+    font-size: 18px;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s ease;
+}
+
+.love-note.left {
+    left: 5%;
+    bottom: -20px;
+}
+
+.love-note.right {
+    right: 5%;
+    top: -10px;
+}
+
+.love-note.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.polaroid.bride.visible {
+    transition-delay: 0.3s;
+}
+
+.polaroid.groom.visible {
+    transition-delay: 1.5s; /* позже появляется */
+}
 
 </style>
 
@@ -807,35 +973,80 @@ body.dark .rsvp-success {
 </button>
 
 
-
 <header>
-    <h1>Виталий Пыриков & Дарья Харитонова</h1>
-    <h2>20 июня 2026</h2>
+    <h1>Дарья & Виталий</h1>
     <div id="inviteTitle"></div>
 </header>
 
+<div class="love-note left">С этого всё началось…</div>
+<div class="love-note right">…и привело нас сюда 🤍</div>
+
 <div class="container">
+
+<div class="childhood">
+
+  <!-- НЕВЕСТА -->
+
+  <div class="polaroid bride">
+      <img src="child1.jpg" alt="">
+      <p>— интересно, кто будет моим мужем?</p>
+
+  </div>
+
+  <!-- ЖЕНИХ -->
+  <div class="polaroid groom">
+      <img src="child2.jpg" alt="">
+      <p>— им буду я 🤍</p>
+  </div>
+  </div>
+
+
+  <!-- Текст -->
+  <div class="invite-text-block">
+    <h2>Дорогие <span>родные и близкие!</span></h2>
+
+    <p>
+      Совсем скоро состоится день нашей свадьбы,
+      и мы будем ещё счастливей, если вы разделите
+      с нами этот чудесный день!
+    </p>
+  </div>
+
+  <!-- Календарь -->
+  <div class="calendar">
+    <h4>Июнь</h4>
+
+    <div class="calendar-grid">
+      <div></div><div></div><div></div><div></div><div>1</div><div>2</div><div>3</div>
+      <div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div>
+      <div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div><div>17</div>
+      <div>18</div><div>19</div>
+      <div class="heart">20</div>
+      <div>21</div><div>22</div><div>23</div><div>24</div>
+      <div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div>
+    </div>
+
+  </div>
 
 
 <nav class="menu">
   <a href="#day">День</a>
-  <a href="#plan">Расписание</a>
+  <a href="#plan">Программа</a>
   <a href="#place">Локации</a>
   <a href="#photos">Фото</a>
 </nav>
 
 <div class="card" id="day">
-    <h3>Свадебный день</h3>
-    <p>Мы будем счастливы разделить этот особенный момент вместе с вами.</p>
+    <h3>До нашей свадьбы осталось</h3>
     <div id="timer"></div>
 </div>
 
 <div class="card" id="plan">
-    <h3>Расписание</h3>
+    <h3>Программа</h3>
     <div class="event"><span class="time">11:30</span>Сбор гостей</div>
     <div class="event"><span class="time">12:00</span>Регистрация брака</div>
     <div class="event"><span class="time">15:00</span>Ресторан (Родственники)</div>
-    <div class="event"><span class="time">19:00</span>Вечеринка (Друзья)</div>
+    <div class="event"><span class="time">18:00</span>Вечеринка (Друзья)</div>
 </div>
 
 <div class="card rsvp">
@@ -874,16 +1085,6 @@ body.dark .rsvp-success {
   <ul id="guests"></ul>
 </div>
 
-<div class="card">
-    <h3>Дресс-код</h3>
-    <p>
-        Мы будем рады, если вы поддержите атмосферу праздника 🤍<br><br>
-        <b>Цвета:</b> бежевый, шампань, серый, пастельные оттенки<br>
-        <b>Стиль:</b> элегантный, вечерний<br><br>
-        Главное — ваш комфорт и хорошее настроение ✨
-    </p>
-</div>
-
 <div class="card" id="place">
 <h3> Место регистрации</h3>
 <p><b>ул. Крупской, 44</b></p>
@@ -906,8 +1107,8 @@ body.dark .rsvp-success {
 
 
 <div class="card">
-<h3> Ресторан (празднования с родственниками)</h3>
-<p><b>ул. Ленина, 118А</b></p>
+<h3> Ресторан </h3>
+<p><b>​Дубровинского, 1а</b></p>
     <img 
         src="imagesrest.jpg" 
         alt="Ресторан" 
@@ -921,8 +1122,8 @@ body.dark .rsvp-success {
 </div>
 
 <div class="card">
-    <h3> Коттедж (вечеринка с друзьями)</h3>
-    <p><b> ул. Елены Стасовой, 75</b></p>
+    <h3> Коттедж </h3>
+    <p><b> Дрокино </b></p>
 
     <img 
         src="imagescottage.jpg" 
@@ -963,7 +1164,7 @@ const weddingDate = new Date("2026-06-20T00:00:00");
 const timer = document.getElementById("timer");
 function updateTimer(){
     const diff = weddingDate - new Date();
-    if(diff<=0){ timer.innerText="🎉 Сегодня свадьба!"; return;}
+    if(diff<=0){ timer.innerText="Сегодня наш день!"; return;}
     const d=Math.floor(diff/86400000);
     const h=Math.floor(diff/3600000)%24;
     const m=Math.floor(diff/60000)%60;
@@ -1157,8 +1358,23 @@ if (guest && !seenInvite) {
     });
 }
 
+const photos = document.querySelectorAll(".polaroid");
+
+/* Плавное появление */
+const photoObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+        }
+    });
+}, { threshold: 0.3 });
+
+photos.forEach(p => photoObserver.observe(p));
+
+
 
 </script>
+
 
 </body>
 </html>
