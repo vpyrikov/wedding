@@ -7,7 +7,6 @@
 <title>Виталий & Дарья — Свадьба</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
 :root {
     --bg: #f7f6f4;
@@ -50,7 +49,6 @@ body {
 
 header {
     padding: 90px 20px 70px;
-    position: relative; /* ВАЖНО */
 }
 
 header h1 {
@@ -60,7 +58,6 @@ header h1 {
     letter-spacing: 1px;
     margin: 0;
 }
-
 
 header h2 {
     font-weight: 300;
@@ -367,7 +364,7 @@ footer {
 
 
 .card:hover {
-    transform: translateY(-6px) scale(1.01);
+    transform: translateY(-6px);
     transition: transform .6s cubic-bezier(.2,.8,.2,1);
 }
 
@@ -407,6 +404,25 @@ body.dark::before {
     }
 }
 
+/* Premium Invite Card */
+#inviteOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+#inviteOverlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
 
 .invite-card {
     position: relative;
@@ -788,7 +804,7 @@ body.dark .rsvp-success {
 
 .polaroid.groom {
     right: 8%;
-    top: 140px;
+    top: 200px;
     --rot: 12deg;
 }
 
@@ -825,15 +841,6 @@ body.dark .rsvp-success {
     transform: translateY(0);
 }
 
-
-.polaroid.bride.visible {
-    transition-delay: 0.3s;
-}
-
-.polaroid.groom.visible {
-    transition-delay: 1.5s; /* позже появляется */
-}
-
 /* Календарь */
 .calendar {
     border: 1px solid var(--border);
@@ -859,6 +866,62 @@ body.dark .rsvp-success {
 
 .calendar-grid div {
     padding: 6px 0;
+}
+
+.heart {
+    position: relative;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.heart::after {
+    content: "❤";
+    position: absolute;
+    top: -10px;
+    right: -8px;
+    font-size: 12px;
+    color: #e36b6b;
+}
+
+.heart::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border: 1px solid rgba(227,107,107,0.4);
+    border-radius: 50%;
+}
+
+.love-note {
+    position: absolute;
+    font-family: "Playfair Display", serif;
+    font-size: 18px;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s ease;
+}
+
+.love-note.left {
+    left: 5%;
+    bottom: -20px;
+}
+
+.love-note.right {
+    right: 5%;
+    top: -10px;
+}
+
+.love-note.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.polaroid.bride.visible {
+    transition-delay: 0.3s;
+}
+
+.polaroid.groom.visible {
+    transition-delay: 1.5s; /* позже появляется */
 }
 
 .wishes-slider {
@@ -922,56 +985,6 @@ body.dark .rsvp-success {
   cursor: grab;
 }
 
-@media (max-width: 600px) {
-  .childhood {
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 60px;
-  }
-
-  .polaroid {
-    position: relative;
-    width: 90%;
-    transform: none !important;
-    opacity: 1 !important;
-  }
-
-  .polaroid p {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.heart {
-    position: relative;
-    color: #e36b6b;
-    font-weight: 500;
-}
-
-.heart::after {
-    content: "❤";
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%) scale(1);
-    font-size: 22px;
-    opacity: 0.9;
-
-    animation: heartBeat 2.4s ease-in-out infinite;
-}
-
-/* мягкое дыхание */
-@keyframes heartBeat {
-    0%   { transform: translateX(-50%) scale(1); }
-    20%  { transform: translateX(-50%) scale(1.12); }
-    40%  { transform: translateX(-50%) scale(1); }
-    60%  { transform: translateX(-50%) scale(1.08); }
-    100% { transform: translateX(-50%) scale(1); }
-}
-
 </style>
 
 <meta property="og:title" content="Свадьба Виталия и Дарьи">
@@ -984,8 +997,6 @@ body.dark .rsvp-success {
 </head>
 
 <body>
-
-
 <div id="inviteOverlay">
   <div class="invite-card">
     <div class="invite-decor"></div>
@@ -1003,14 +1014,11 @@ body.dark .rsvp-success {
         <span>20 июня 2026</span>
       </div>
 
-      <div class="unlock">
-        <div class="slider" id="slider">→</div>
-        <span>Проведите, чтобы открыть</span>
-      </div>
-
+      <button id="enterSite">Открыть приглашение</button>
     </div>
   </div>
 </div>
+
 
 
 <div id="lightbox">
@@ -1031,6 +1039,8 @@ body.dark .rsvp-success {
     <div id="inviteTitle"></div>
 </header>
 
+<div class="love-note left">С этого всё началось…</div>
+<div class="love-note right">…и привело нас сюда 🤍</div>
 
 <div class="container">
 
@@ -1040,7 +1050,7 @@ body.dark .rsvp-success {
 
   <div class="polaroid bride">
       <img src="child1.jpg" alt="">
-      <p>— интересно, кто будет моим мужем, когда я вырасту?</p>
+      <p>— интересно, кто будет моим мужем?</p>
 
   </div>
 
@@ -1079,14 +1089,21 @@ body.dark .rsvp-success {
 
   </div>
 
-<div class="card">
-    <h3>Дресс-код</h3>
-    <p>
-	Нам важно, чтобы вы чувствовали себя комфортно, поэтому строгих правил нет. Приходите в чём вам удобно 🤍<br><br>
-	Но есть небольшое пожелание:<br><br>
-        <b>На регистрацию:</b> чуть более торжественный образ<br>
-        <b>В коттедж:</b> лёгкий и свободный<br><br>
-    </p>
+
+<nav class="menu">
+  <a href="#day">День</a>
+  <a href="#plan">Программа</a>
+  <a href="#place">Локации</a>
+  <a href="#photos">Фото</a>
+</nav>
+
+
+<div class="card" id="plan">
+    <h3>Программа</h3>
+    <div class="event"><span class="time">11:30</span>Сбор гостей</div>
+    <div class="event"><span class="time">12:00</span>Регистрация брака</div>
+    <div class="event"><span class="time">15:00</span>Ресторан (Родственники)</div>
+    <div class="event"><span class="time">18:00</span>Вечеринка (Друзья)</div>
 </div>
 
 <div class="card wishes">
@@ -1094,10 +1111,14 @@ body.dark .rsvp-success {
 
   <div class="wishes-slider">
     <div class="wish active">
-      <p>У нас к вам огромная просьба не тратьтесь на букеты, через три дня мы улетаем в свадебное путешествие и не сможем насладиться их красотой💔</p>
+      <p>Мы очень любим цветы (т.е невеста очень любит :)) Но через три дня мы улетаем в свадебное путешествие и не сможем насладиться их красотой💔 Поэтому у нас к вам огромная просьба не тратьтесь на букеты. Ваше присутствие лучший подарок.</p>
     </div>
     <div class="wish">
-      <p>Мы хотим учесть индвидуальные предпочтения всех гостей, поэтому пройдите, пожалуйста, опрос в ВК</p>
+       <b>Дресс-код:</b><br><p>Нам важно, чтобы вы чувствовали себя комфортно, поэтому строгих правил нет. Приходите в чём вам удобно 🤍
+	Но есть небольшое пожелание:<br>
+        <b>На регистрацию:</b> чуть более торжественный образ
+        <b>В коттедж:</b> лёгкий и свободный
+</p>
     </div>
     <div class="wish">
       <p>Главное — возьмите с собой хорошее настроение!</p>
@@ -1110,26 +1131,11 @@ body.dark .rsvp-success {
   </div>
 </div>
 
-<nav class="menu">
-  <a href="#day">День</a>
-  <a href="#plan">Программа</a>
-  <a href="#place">Локации</a>
-  <a href="#photos">Фото</a>
-</nav>
 
 <div class="card" id="day">
     <h3>До нашей свадьбы осталось</h3>
     <div id="timer"></div>
 </div>
-
-<div class="card" id="plan">
-    <h3>Программа</h3>
-    <div class="event"><span class="time">11:30</span>Сбор гостей</div>
-    <div class="event"><span class="time">12:00</span>Регистрация брака</div>
-    <div class="event"><span class="time">15:00</span>Ресторан (Родственники)</div>
-    <div class="event"><span class="time">18:00</span>Вечеринка (Друзья)</div>
-</div>
-
 
 
 <div class="card" id="place">
@@ -1152,6 +1158,7 @@ body.dark .rsvp-success {
 </div>
 </div>
 
+
 <div class="card">
 <h3> Ресторан </h3>
 <p><b>​Дубровинского, 1а</b></p>
@@ -1162,8 +1169,14 @@ body.dark .rsvp-success {
     >
 <div class="map">
 <iframe 
-  src="https://yandex.ru/map-widget/v1/?text=Красноярск,%20ул.%20Ленина%20118А&z=16">
+  src="https://yandex.ru/map-widget/v1/?text=Красноярск,%20Дубровинского%201а&z=16">
 </iframe>
+
+<a class="route-btn"
+   href="https://yandex.ru/maps/?rtext=~Красноярск%20Дубровинского%201а"
+   target="_blank">
+   🚗 Построить маршрут
+</a>
 </div>
 </div>
 
@@ -1177,17 +1190,18 @@ body.dark .rsvp-success {
         style="width:100%; border-radius:20px; margin-bottom:15px;"
     >
 
-    <div class="map">
-        <iframe 
-            src="https://yandex.ru/map-widget/v1/?text=г.%20Красноярск,%20ул.%20Елены%20Стасовой%2075&z=16">
-        </iframe>
-<a class="route-btn"
-href="https://yandex.ru/maps/?rtext=~ул.%20Елены%20Стасовой%2075"
-target="_blank">
-🚗 Построить маршрут
-</a>
+<div class="map">
+<iframe 
+  src="https://yandex.ru/map-widget/v1/?text=посёлок%20Дрокино%20Красноярский%20край&z=13">
+</iframe>
 
-    </div>
+<a class="route-btn"
+   href="https://yandex.ru/maps/?rtext=~Дрокино%20Красноярский%20край"
+   target="_blank">
+   🚗 Построить маршрут
+</a>
+</div>
+
 </div>
 <div class="card" id="photos">
     <h3> Мы Вас ждем!</h3>
@@ -1231,6 +1245,7 @@ target="_blank">
   <h3>Наши гости🤍</h3>
   <ul id="guests"></ul>
 </div>
+
 
 <footer>С любовью ❤️ Виталий и Дарья</footer>
 
@@ -1364,7 +1379,6 @@ createGoldDust();
   }, 700);
 });
 
-
 function createGoldDust() {
   const dust = document.getElementById("goldDust");
   dust.innerHTML = "";
@@ -1403,7 +1417,7 @@ function loadGuests() {
       }
 
       rows.forEach((row, i) => {
-	const cells = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+        const cells = row.split(",");
         const name = cells[1]?.replace(/^"|"$/g, "").trim();
 
         if (name) {
@@ -1427,12 +1441,18 @@ const guest=new URLSearchParams(location.search).get("guest");
 if (guest && !seenInvite) {
     const overlay = document.getElementById("inviteOverlay");
     const nameEl  = document.getElementById("inviteName");
+    const enter   = document.getElementById("enterSite");
 
     const prefix = guest.endsWith("а") ? "Дорогая" : "Дорогой";
     nameEl.textContent = `${prefix} ${guest}`;
 
     overlay.classList.add("active");
 
+    enter.addEventListener("click", () => {
+        localStorage.setItem("inviteSeen", "true");
+        overlay.style.opacity = "0";
+        setTimeout(() => overlay.remove(), 900);
+    });
 }
 
 const photos = document.querySelectorAll(".polaroid");
@@ -1447,24 +1467,6 @@ const photoObserver = new IntersectionObserver(entries => {
 }, { threshold: 0.3 });
 
 photos.forEach(p => photoObserver.observe(p));
-
-let wishIndex = 0;
-const wishes = document.querySelectorAll(".wish");
-
-function showWish(i) {
-  wishes.forEach(w => w.classList.remove("active"));
-  wishes[i].classList.add("active");
-}
-
-function nextWish() {
-  wishIndex = (wishIndex + 1) % wishes.length;
-  showWish(wishIndex);
-}
-
-function prevWish() {
-  wishIndex = (wishIndex - 1 + wishes.length) % wishes.length;
-  showWish(wishIndex);
-}
 
 const slider = document.getElementById("slider");
 
@@ -1493,24 +1495,56 @@ if (slider) {
     slider.style.transform = `translateX(0)`;
   });
 }
+/* Wishes slider */
+const wishes = document.querySelectorAll(".wish");
+let currentWish = 0;
 
-function unlockInvite() {
-    const overlay = document.getElementById("inviteOverlay");
+// создаём счётчик
+const counter = document.createElement("div");
+counter.style.marginTop = "10px";
+counter.style.fontSize = "14px";
+counter.style.color = "var(--muted)";
+document.querySelector(".wishes").appendChild(counter);
 
-    overlay.style.opacity = "0";
+function updateWish() {
+  wishes.forEach((w, i) => {
+    w.classList.remove("active");
+    if (i === currentWish) w.classList.add("active");
+  });
 
-    setTimeout(() => {
-        overlay.style.display = "none";
-    }, 600);
-
-    localStorage.setItem("inviteSeen", "true");
+  // обновляем (1/3)
+  counter.textContent = `${currentWish + 1} / ${wishes.length}`;
 }
 
+// вперёд
+function nextWish() {
+  currentWish = (currentWish + 1) % wishes.length;
+  updateWish();
+}
 
+// назад
+function prevWish() {
+  currentWish = (currentWish - 1 + wishes.length) % wishes.length;
+  updateWish();
+}
+
+// инициализация
+updateWish();
+
+let startX = 0;
+
+document.querySelector(".wishes-slider").addEventListener("touchstart", e => {
+  startX = e.touches[0].clientX;
+});
+
+document.querySelector(".wishes-slider").addEventListener("touchend", e => {
+  let endX = e.changedTouches[0].clientX;
+
+  if (endX - startX > 50) prevWish();
+  if (startX - endX > 50) nextWish();
+});
 
 </script>
-
-
 
 
 </body>
