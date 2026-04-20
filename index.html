@@ -7,6 +7,7 @@
 <title>Виталий & Дарья — Свадьба</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
 :root {
     --bg: #f7f6f4;
@@ -49,6 +50,7 @@ body {
 
 header {
     padding: 90px 20px 70px;
+    position: relative; /* ВАЖНО */
 }
 
 header h1 {
@@ -58,6 +60,7 @@ header h1 {
     letter-spacing: 1px;
     margin: 0;
 }
+
 
 header h2 {
     font-weight: 300;
@@ -364,7 +367,7 @@ footer {
 
 
 .card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-6px) scale(1.01);
     transition: transform .6s cubic-bezier(.2,.8,.2,1);
 }
 
@@ -404,25 +407,6 @@ body.dark::before {
     }
 }
 
-/* Premium Invite Card */
-#inviteOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1s ease;
-}
-
-#inviteOverlay.active {
-    opacity: 1;
-    pointer-events: auto;
-}
 
 .invite-card {
     position: relative;
@@ -841,6 +825,15 @@ body.dark .rsvp-success {
     transform: translateY(0);
 }
 
+
+.polaroid.bride.visible {
+    transition-delay: 0.3s;
+}
+
+.polaroid.groom.visible {
+    transition-delay: 1.5s; /* позже появляется */
+}
+
 /* Календарь */
 .calendar {
     border: 1px solid var(--border);
@@ -868,60 +861,115 @@ body.dark .rsvp-success {
     padding: 6px 0;
 }
 
+.wishes-slider {
+  position: relative;
+  min-height: 80px;
+}
+
+.wish {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: .6s ease;
+}
+
+.wish.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.wishes-nav {
+  margin-top: 20px;
+  font-size: 26px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.unlock {
+  margin-top: 30px;
+  background: #eee;
+  border-radius: 40px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+}
+
+.unlock span {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+}
+
+.slider {
+  width: 48px;
+  height: 48px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  position: relative;
+  z-index: 2;
+  cursor: grab;
+}
+
+@media (max-width: 600px) {
+  .childhood {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 60px;
+  }
+
+  .polaroid {
+    position: relative;
+    width: 90%;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .polaroid p {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .heart {
     position: relative;
-    font-weight: 600;
-    color: var(--text);
+    color: #e36b6b;
+    font-weight: 500;
 }
 
 .heart::after {
     content: "❤";
     position: absolute;
-    top: -10px;
-    right: -8px;
-    font-size: 12px;
-    color: #e36b6b;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    font-size: 22px;
+    opacity: 0.9;
+
+    animation: heartBeat 2.4s ease-in-out infinite;
 }
 
-.heart::before {
-    content: "";
-    position: absolute;
-    inset: -6px;
-    border: 1px solid rgba(227,107,107,0.4);
-    border-radius: 50%;
-}
-
-.love-note {
-    position: absolute;
-    font-family: "Playfair Display", serif;
-    font-size: 18px;
-    color: var(--muted);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 1s ease;
-}
-
-.love-note.left {
-    left: 5%;
-    bottom: -20px;
-}
-
-.love-note.right {
-    right: 5%;
-    top: -10px;
-}
-
-.love-note.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.polaroid.bride.visible {
-    transition-delay: 0.3s;
-}
-
-.polaroid.groom.visible {
-    transition-delay: 1.5s; /* позже появляется */
+/* мягкое дыхание */
+@keyframes heartBeat {
+    0%   { transform: translateX(-50%) scale(1); }
+    20%  { transform: translateX(-50%) scale(1.12); }
+    40%  { transform: translateX(-50%) scale(1); }
+    60%  { transform: translateX(-50%) scale(1.08); }
+    100% { transform: translateX(-50%) scale(1); }
 }
 
 </style>
@@ -936,6 +984,8 @@ body.dark .rsvp-success {
 </head>
 
 <body>
+
+
 <div id="inviteOverlay">
   <div class="invite-card">
     <div class="invite-decor"></div>
@@ -953,11 +1003,14 @@ body.dark .rsvp-success {
         <span>20 июня 2026</span>
       </div>
 
-      <button id="enterSite">Открыть приглашение</button>
+      <div class="unlock">
+        <div class="slider" id="slider">→</div>
+        <span>Проведите, чтобы открыть</span>
+      </div>
+
     </div>
   </div>
 </div>
-
 
 
 <div id="lightbox">
@@ -978,8 +1031,6 @@ body.dark .rsvp-success {
     <div id="inviteTitle"></div>
 </header>
 
-<div class="love-note left">С этого всё началось…</div>
-<div class="love-note right">…и привело нас сюда 🤍</div>
 
 <div class="container">
 
@@ -989,7 +1040,7 @@ body.dark .rsvp-success {
 
   <div class="polaroid bride">
       <img src="child1.jpg" alt="">
-      <p>— интересно, кто будет моим мужем?</p>
+      <p>— интересно, кто будет моим мужем, когда я вырасту?</p>
 
   </div>
 
@@ -1028,6 +1079,36 @@ body.dark .rsvp-success {
 
   </div>
 
+<div class="card">
+    <h3>Дресс-код</h3>
+    <p>
+	Нам важно, чтобы вы чувствовали себя комфортно, поэтому строгих правил нет. Приходите в чём вам удобно 🤍<br><br>
+	Но есть небольшое пожелание:<br><br>
+        <b>На регистрацию:</b> чуть более торжественный образ<br>
+        <b>В коттедж:</b> лёгкий и свободный<br><br>
+    </p>
+</div>
+
+<div class="card wishes">
+  <h3>Пожелания</h3>
+
+  <div class="wishes-slider">
+    <div class="wish active">
+      <p>У нас к вам огромная просьба не тратьтесь на букеты, через три дня мы улетаем в свадебное путешествие и не сможем насладиться их красотой💔</p>
+    </div>
+    <div class="wish">
+      <p>Мы хотим учесть индвидуальные предпочтения всех гостей, поэтому пройдите, пожалуйста, опрос в ВК</p>
+    </div>
+    <div class="wish">
+      <p>Главное — возьмите с собой хорошее настроение!</p>
+    </div>
+  </div>
+
+  <div class="wishes-nav">
+    <span onclick="prevWish()">‹</span>
+    <span onclick="nextWish()">›</span>
+  </div>
+</div>
 
 <nav class="menu">
   <a href="#day">День</a>
@@ -1049,41 +1130,7 @@ body.dark .rsvp-success {
     <div class="event"><span class="time">18:00</span>Вечеринка (Друзья)</div>
 </div>
 
-<div class="card rsvp">
-  <h3>Подтвердите присутствие</h3>
-  <form id="rsvpForm">
-<input
-  id="name"
-  name="entry.1249449313"
-  placeholder="Ваше ФИО"
-  minlength="3"
-  required
->
-    <button type="submit">ПОДТВЕРДИТЬ</button>
-  </form>
 
-<div class="rsvp-success" id="rsvpSuccess">
-<div class="gold-dust" id="goldDust"></div>
-  <div class="success-ring">
-    <svg viewBox="0 0 120 120">
-      <circle cx="60" cy="60" r="52"/>
-    </svg>
-    <div class="success-check">✓</div>
-  </div>
-
-  <div class="success-text">
-    <h4>Подтверждение получено</h4>
-    <p>Мы с нетерпением ждём встречи 🤍</p>
-  </div>
-</div>
-
-  <div id="msg" class="rsvp-result"></div>
-</div>
-
-<div class="card">
-  <h3>Наши гости🤍</h3>
-  <ul id="guests"></ul>
-</div>
 
 <div class="card" id="place">
 <h3> Место регистрации</h3>
@@ -1104,7 +1151,6 @@ body.dark .rsvp-success {
 </a>
 </div>
 </div>
-
 
 <div class="card">
 <h3> Ресторан </h3>
@@ -1148,6 +1194,42 @@ target="_blank">
     <div class="gallery">
         <img src="images1.jpg">
     </div>
+</div>
+
+<div class="card rsvp">
+  <h3>Подтвердите присутствие</h3>
+  <form id="rsvpForm">
+<input
+  id="name"
+  name="entry.1249449313"
+  placeholder="Ваше ФИО"
+  minlength="3"
+  required
+>
+    <button type="submit">ПОДТВЕРДИТЬ</button>
+  </form>
+
+<div class="rsvp-success" id="rsvpSuccess">
+<div class="gold-dust" id="goldDust"></div>
+  <div class="success-ring">
+    <svg viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="52"/>
+    </svg>
+    <div class="success-check">✓</div>
+  </div>
+
+  <div class="success-text">
+    <h4>Подтверждение получено</h4>
+    <p>Мы с нетерпением ждём встречи 🤍</p>
+  </div>
+</div>
+
+  <div id="msg" class="rsvp-result"></div>
+</div>
+
+<div class="card">
+  <h3>Наши гости🤍</h3>
+  <ul id="guests"></ul>
 </div>
 
 <footer>С любовью ❤️ Виталий и Дарья</footer>
@@ -1282,6 +1364,7 @@ createGoldDust();
   }, 700);
 });
 
+
 function createGoldDust() {
   const dust = document.getElementById("goldDust");
   dust.innerHTML = "";
@@ -1320,7 +1403,7 @@ function loadGuests() {
       }
 
       rows.forEach((row, i) => {
-        const cells = row.split(",");
+	const cells = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
         const name = cells[1]?.replace(/^"|"$/g, "").trim();
 
         if (name) {
@@ -1344,18 +1427,12 @@ const guest=new URLSearchParams(location.search).get("guest");
 if (guest && !seenInvite) {
     const overlay = document.getElementById("inviteOverlay");
     const nameEl  = document.getElementById("inviteName");
-    const enter   = document.getElementById("enterSite");
 
     const prefix = guest.endsWith("а") ? "Дорогая" : "Дорогой";
     nameEl.textContent = `${prefix} ${guest}`;
 
     overlay.classList.add("active");
 
-    enter.addEventListener("click", () => {
-        localStorage.setItem("inviteSeen", "true");
-        overlay.style.opacity = "0";
-        setTimeout(() => overlay.remove(), 900);
-    });
 }
 
 const photos = document.querySelectorAll(".polaroid");
@@ -1371,9 +1448,69 @@ const photoObserver = new IntersectionObserver(entries => {
 
 photos.forEach(p => photoObserver.observe(p));
 
+let wishIndex = 0;
+const wishes = document.querySelectorAll(".wish");
+
+function showWish(i) {
+  wishes.forEach(w => w.classList.remove("active"));
+  wishes[i].classList.add("active");
+}
+
+function nextWish() {
+  wishIndex = (wishIndex + 1) % wishes.length;
+  showWish(wishIndex);
+}
+
+function prevWish() {
+  wishIndex = (wishIndex - 1 + wishes.length) % wishes.length;
+  showWish(wishIndex);
+}
+
+const slider = document.getElementById("slider");
+
+if (slider) {
+  let isDown = false;
+  let startX;
+
+  slider.addEventListener("touchstart", e => {
+    isDown = true;
+    startX = e.touches[0].clientX;
+  });
+
+  slider.addEventListener("touchmove", e => {
+    if (!isDown) return;
+
+    let x = e.touches[0].clientX - startX;
+    x = Math.max(0, Math.min(x, 220));
+
+    slider.style.transform = `translateX(${x}px)`;
+
+    if (x > 200) unlockInvite();
+  });
+
+  slider.addEventListener("touchend", () => {
+    isDown = false;
+    slider.style.transform = `translateX(0)`;
+  });
+}
+
+function unlockInvite() {
+    const overlay = document.getElementById("inviteOverlay");
+
+    overlay.style.opacity = "0";
+
+    setTimeout(() => {
+        overlay.style.display = "none";
+    }, 600);
+
+    localStorage.setItem("inviteSeen", "true");
+}
+
 
 
 </script>
+
+
 
 
 </body>
