@@ -759,7 +759,7 @@ body.dark .rsvp-success {
 
 .childhood {
     position: relative;
-    height: 460px;
+    height: 520px;
     margin-bottom: 120px;
     perspective: 1200px;
 }
@@ -797,14 +797,14 @@ body.dark .rsvp-success {
 
 /* Позиции */
 .polaroid.bride {
-    left: 8%;
-    top: 0;
+    left: 2%;
+    top: 20;
     --rot: -10deg;
 }
 
 .polaroid.groom {
     right: 8%;
-    top: 200px;
+    top: 260px;
     --rot: 12deg;
 }
 
@@ -983,6 +983,48 @@ body.dark .rsvp-success {
   position: relative;
   z-index: 2;
   cursor: grab;
+}
+
+/* FIX WISHES MOBILE */
+.wishes-slider {
+  position: relative;
+  min-height: 140px;
+  overflow: hidden;
+}
+
+.wish {
+  position: absolute;
+  inset: 0;
+  padding: 0 10px; /* чтобы текст не прилипал к краям */
+  
+  opacity: 0;
+  transform: translateX(40px);
+  transition: .6s ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* главный фикс для iPhone */
+@media (max-width: 600px) {
+  .card.wishes {
+    padding: 28px 20px;
+  }
+
+  .wish p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .wish b {
+    display: block;
+    margin-top: 6px;
+  }
 }
 
 </style>
