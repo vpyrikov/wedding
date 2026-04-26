@@ -95,7 +95,8 @@ header h2 {
 }
 
 .toggle {
-    position: absolute;
+    z-index: 4000;
+    position: fixed; /* лучше чем absolute */
     top: 20px;
     right: 90px;
     font-size: 13px;
@@ -237,14 +238,13 @@ li button:hover {
     align-items: center;
     justify-content: center;
     opacity: 0;
-    pointer-events: none;
     transition: opacity 0.4s ease;
     z-index: 999;
 }
 
 #lightbox.active {
     opacity: 1;
-    pointer-events: auto;
+
 }
 
 #lightbox img {
@@ -267,7 +267,8 @@ li button:hover {
 }
 
 .music-btn {
-    position: absolute;
+    z-index: 4000;
+    position: fixed; /* лучше чем absolute */
     top: 10px;
     right: 20px;
     width: 56px;
@@ -585,25 +586,6 @@ body.dark .invite-card {
     bottom: 20px;
 }
 
-/* Overlay center */
-#inviteOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.6);
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .8s ease;
-}
-
-#inviteOverlay.active {
-    opacity: 1;
-    pointer-events: auto;
-}
 
 
 /* RSVP SUCCESS OVERLAY */
@@ -916,13 +898,7 @@ body.dark .rsvp-success {
     transform: translateY(0);
 }
 
-.polaroid.bride.visible {
-    transition-delay: 0.3s;
-}
 
-.polaroid.groom.visible {
-    transition-delay: 1.5s; /* позже появляется */
-}
 
 .wishes-slider {
   position: relative;
@@ -952,37 +928,60 @@ body.dark .rsvp-success {
 }
 
 .unlock {
-  margin-top: 30px;
-  background: #eee;
+  margin-top: 34px;
+  background: rgba(0,0,0,0.05);
   border-radius: 40px;
-  height: 60px;
+  height: 64px;
   position: relative;
   display: flex;
   align-items: center;
   padding: 6px;
+  overflow: hidden;
+}
+
+body.dark .unlock {
+  background: rgba(255,255,255,0.08);
 }
 
 .unlock span {
   position: absolute;
+  pointer-events: none;
   width: 100%;
   text-align: center;
-  color: #888;
+  color: var(--muted);
   font-size: 14px;
+  letter-spacing: .05em;
+}
+
+/* shimmer эффект */
+.unlock::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.4), transparent);
+  transform: translateX(-100%);
+  animation: shimmer 2.5s infinite;
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
 }
 
 .slider {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   background: var(--accent);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 18px;
+  font-size: 20px;
   position: relative;
   z-index: 2;
   cursor: grab;
+  transition: transform .2s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 
 /* FIX WISHES MOBILE */
@@ -1027,6 +1026,118 @@ body.dark .rsvp-success {
   }
 }
 
+body.locked {
+  overflow: hidden;
+  height: 100vh;
+}
+
+.unlock {
+  touch-action: pan-x;
+  user-select: none;
+}
+
+.slider {
+  touch-action: none;
+  user-select: none;
+}
+
+body.locked {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* полностью скрываем основной сайт до открытия */
+body.locked .container,
+body.locked header,
+body.locked footer,
+body.locked .menu {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.98);
+  transition: opacity .6s ease, transform .6s ease;
+}
+
+/* после открытия */
+body:not(.locked) .container,
+body:not(.locked) header,
+body:not(.locked) footer,
+body:not(.locked) .menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+body:not(.locked) .container {
+  animation: pageEnter 1s ease forwards;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 600px) {
+
+  .childhood {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 60px;
+  }
+
+  .polaroid {
+    position: relative; /* вместо absolute */
+    width: 80%;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .polaroid.bride,
+  .polaroid.groom {
+    left: auto;
+    right: auto;
+    top: auto;
+    --rot: 0deg;
+  }
+
+  .polaroid img {
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .childhood {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 60px;
+  }
+
+  .polaroid {
+    position: relative;
+    width: 80%;
+    transform: none !important;
+    opacity: 0;              /* 👈 важно */
+    margin-bottom: 10px;
+  }
+
+  .polaroid.visible {
+    opacity: 1;
+  }
+}
+
 </style>
 
 <meta property="og:title" content="Свадьба Виталия и Дарьи">
@@ -1056,7 +1167,10 @@ body.dark .rsvp-success {
         <span>20 июня 2026</span>
       </div>
 
-      <button id="enterSite">Открыть приглашение</button>
+<div class="unlock" id="unlockBar">
+  <span>Проведите, чтобы открыть</span>
+  <div class="slider" id="slider">→</div>
+</div>
     </div>
   </div>
 </div>
@@ -1119,15 +1233,17 @@ body.dark .rsvp-success {
   <div class="calendar">
     <h4>Июнь</h4>
 
-    <div class="calendar-grid">
-      <div></div><div></div><div></div><div></div><div>1</div><div>2</div><div>3</div>
-      <div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div>
-      <div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div><div>17</div>
-      <div>18</div><div>19</div>
-      <div class="heart">20</div>
-      <div>21</div><div>22</div><div>23</div><div>24</div>
-      <div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div>
-    </div>
+<div class="calendar-grid">
+  <!-- ПН ВТ СР ЧТ ПТ СБ ВС -->
+  <div>ПН</div><div>ВТ</div><div>СР</div><div>ЧТ</div><div>ПТ</div><div>СБ</div><div>ВС</div>
+  <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div>
+  <div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div>
+  <div>15</div><div>16</div><div>17</div><div>18</div><div>19</div>
+  <div class="heart">20</div>
+  <div>21</div>
+  <div>22</div><div>23</div><div>24</div><div>25</div><div>26</div><div>27</div><div>28</div>
+  <div>29</div><div>30</div>
+</div>
 
   </div>
 
@@ -1338,8 +1454,8 @@ const observer = new IntersectionObserver(entries => {
 }, {
     threshold: 0.15
 });
-
 cards.forEach(card => observer.observe(card));
+
 /* Gallery lightbox */
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightboxImg");
@@ -1478,65 +1594,96 @@ loadGuests();
 setInterval(loadGuests, 90000);
 
 /* Premium personal invite */
-const seenInvite = localStorage.getItem("inviteSeen");
-const guest=new URLSearchParams(location.search).get("guest");
-if (guest && !seenInvite) {
-    const overlay = document.getElementById("inviteOverlay");
-    const nameEl  = document.getElementById("inviteName");
-    const enter   = document.getElementById("enterSite");
+const overlay = document.getElementById("inviteOverlay");
+const nameEl  = document.getElementById("inviteName");
 
-    const prefix = guest.endsWith("а") ? "Дорогая" : "Дорогой";
-    nameEl.textContent = `${prefix} ${guest}`;
+const guestName = new URLSearchParams(location.search).get("guest");
 
-    overlay.classList.add("active");
-
-    enter.addEventListener("click", () => {
-        localStorage.setItem("inviteSeen", "true");
-        overlay.style.opacity = "0";
-        setTimeout(() => overlay.remove(), 900);
-    });
+if (guestName) {
+    const prefix = guestName.endsWith("а") ? "Дорогая" : "Дорогой";
+    nameEl.textContent = `${prefix} ${guestName}`;
+} else {
+    nameEl.textContent = "Уважаемый(ая) гость!";
 }
+
+overlay.classList.add("active");
+
 
 const photos = document.querySelectorAll(".polaroid");
 
-/* Плавное появление */
 const photoObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-        }
+        if (!entry.isIntersecting) return;
+
+        const el = entry.target;
+
+        // очередь появления
+        const index = [...photos].indexOf(el);
+
+        setTimeout(() => {
+            el.classList.add("visible");
+        }, index * 600); // ← задержка ТОЛЬКО появления
+
+        photoObserver.unobserve(el);
     });
-}, { threshold: 0.3 });
+}, {
+    threshold: 0.3
+});
 
 photos.forEach(p => photoObserver.observe(p));
 
+let isDragging = false;
+let startX = 0;
+let currentX = 0;
+let maxSlide = 0;
+
+const unlockBar = document.getElementById("unlockBar");
 const slider = document.getElementById("slider");
 
-if (slider) {
-  let isDown = false;
-  let startX;
-
-  slider.addEventListener("touchstart", e => {
-    isDown = true;
-    startX = e.touches[0].clientX;
-  });
-
-  slider.addEventListener("touchmove", e => {
-    if (!isDown) return;
-
-    let x = e.touches[0].clientX - startX;
-    x = Math.max(0, Math.min(x, 220));
-
-    slider.style.transform = `translateX(${x}px)`;
-
-    if (x > 200) unlockInvite();
-  });
-
-  slider.addEventListener("touchend", () => {
-    isDown = false;
-    slider.style.transform = `translateX(0)`;
-  });
+function updateMaxSlide() {
+  maxSlide = unlockBar.offsetWidth - slider.offsetWidth - 6;
 }
+
+window.addEventListener("load", updateMaxSlide);
+window.addEventListener("resize", updateMaxSlide);
+
+/* START */
+unlockBar.addEventListener("pointerdown", (e) => {
+  isDragging = true;
+  startX = e.clientX;
+  slider.style.transition = "none";
+});
+
+/* MOVE */
+window.addEventListener("pointermove", (e) => {
+  if (!isDragging) return;
+
+  currentX = (e.clientX || e.touches?.[0]?.clientX) - startX;
+
+  currentX = Math.max(0, Math.min(currentX, maxSlide));
+
+  slider.style.transform = `translateX(${currentX}px)`;
+});
+
+/* END */
+function endDrag() {
+  if (!isDragging) return;
+
+  isDragging = false;
+  slider.style.transition = "transform .3s ease";
+
+  if (currentX > maxSlide * 0.85) {
+    slider.style.transform = `translateX(${maxSlide}px)`;
+    setTimeout(unlockInvite, 200);
+  } else {
+    slider.style.transform = `translateX(0px)`;
+  }
+}
+
+window.addEventListener("pointerup", endDrag);
+window.addEventListener("pointercancel", endDrag);
+
+
 /* Wishes slider */
 const wishes = document.querySelectorAll(".wish");
 let currentWish = 0;
@@ -1573,18 +1720,45 @@ function prevWish() {
 // инициализация
 updateWish();
 
-let startX = 0;
+
+let startX_wish = 0;
 
 document.querySelector(".wishes-slider").addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
+  startX_wish = e.touches[0].clientX;
 });
 
 document.querySelector(".wishes-slider").addEventListener("touchend", e => {
   let endX = e.changedTouches[0].clientX;
 
-  if (endX - startX > 50) prevWish();
-  if (startX - endX > 50) nextWish();
+  if (endX - startX_wish > 50) prevWish();
+  if (startX_wish - endX > 50) nextWish();
 });
+
+function unlockInvite() {
+  overlay.style.opacity = "0";
+  overlay.style.pointerEvents = "none";
+
+  setTimeout(() => {
+    overlay.remove();
+
+    document.body.classList.remove("locked");
+
+    // запускаем анимации карточек ПОСЛЕ разблокировки
+    setTimeout(() => {
+      cards.forEach(card => observer.observe(card));
+    }, 200);
+
+  }, 800);
+
+  music.play();
+  fadeVolume(0, 1);
+  btn.classList.add("playing");
+  playing = true;
+}
+
+document.body.classList.add("locked");
+
+
 
 </script>
 
