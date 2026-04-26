@@ -96,7 +96,7 @@ header h2 {
 
 .toggle {
     z-index: 4000;
-    position: fixed; /* лучше чем absolute */
+    position: absolute; /* лучше чем absolute */
     top: 20px;
     right: 90px;
     font-size: 13px;
@@ -269,7 +269,7 @@ pointer-events: none;
 
 .music-btn {
     z-index: 4000;
-    position: fixed; /* лучше чем absolute */
+    position: absolute; /* лучше чем absolute */
     top: 10px;
     right: 20px;
     width: 56px;
@@ -1088,6 +1088,113 @@ body:not(.locked) .container {
   }
 }
 
+@media (max-width: 600px) {
+
+  .childhood {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 60px;
+  }
+
+  .polaroid {
+    position: relative; /* вместо absolute */
+    width: 80%;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .polaroid.bride,
+  .polaroid.groom {
+    left: auto;
+    right: auto;
+    top: auto;
+    --rot: 0deg;
+  }
+
+  .polaroid img {
+    width: 100%;
+  }
+
+}
+
+.photo-line {
+    overflow: hidden;
+    border-radius: 24px;
+}
+
+.photo-track {
+    display: flex;
+    gap: 20px;
+    animation: scrollPhotos 35s linear infinite;
+}
+
+.photo-track img {
+    height: 260px;
+    border-radius: 22px;
+    object-fit: cover;
+    box-shadow: 0 30px 60px rgba(0,0,0,.35);
+}
+
+@keyframes scrollPhotos {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.photo-track img {
+    cursor: pointer;
+    transition: transform .5s ease, box-shadow .5s ease;
+}
+
+.photo-track img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 30px 60px rgba(0,0,0,.3);
+}
+
+.photo-line:hover .photo-track {
+    animation-play-state: paused;
+}
+
+.photo-line {
+    position: relative;
+}
+
+.photo-line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to right,
+        var(--bg),
+        transparent 20%,
+        transparent 80%,
+        var(--bg)
+    );
+    pointer-events: none;
+}
+
+#lightbox.active {
+    opacity: 1;
+    pointer-events: auto; /* ВОТ ЭТО КЛЮЧ */
+}
+
+@media (max-width: 600px) {
+    .photo-track img {
+        height: 200px; /* чтобы не ломало экран */
+    }
+}
+
+#lightbox img {
+    max-width: 92%;
+    max-height: 92%;
+    border-radius: 24px;
+    box-shadow: 0 40px 80px rgba(0,0,0,.6);
+    animation: zoomIn 0.4s ease;
+    cursor: zoom-out; /* UX */
+}
+
 </style>
 
 <meta property="og:title" content="Свадьба Виталия и Дарьи">
@@ -1142,7 +1249,7 @@ body:not(.locked) .container {
 
 <header>
     <h1>Дарья & Виталий</h1>
-    <div id="inviteTitle"></div>
+
 </header>
 
 <div class="love-note left">С этого всё началось…</div>
@@ -1199,8 +1306,8 @@ body:not(.locked) .container {
 
 
 <nav class="menu">
-  <a href="#day">День</a>
   <a href="#plan">Программа</a>
+  <a href="#cardwishes">Пожелания</a>
   <a href="#place">Локации</a>
   <a href="#photos">Фото</a>
 </nav>
@@ -1214,7 +1321,7 @@ body:not(.locked) .container {
     <div class="event"><span class="time">18:00</span>Вечеринка (Друзья)</div>
 </div>
 
-<div class="card wishes">
+<div class="card wishes" id="cardwishes">
   <h3>Пожелания</h3>
 
   <div class="wishes-slider">
@@ -1311,6 +1418,62 @@ body:not(.locked) .container {
 </div>
 
 </div>
+
+
+<div class="card" id="photos1">
+    <h3> Наша история</h3>
+<div class="photo-line">
+  <div class="photo-track">
+    <img src="2019_1.jpg">
+    <img src="2019_2.jpg">
+    <img src="2019_3.jpg">
+    <img src="2020_1.jpg">
+    <img src="2020_2.jpg">
+    <img src="2020_3.jpg">
+    <img src="2021.jpg">
+    <img src="2022.jpg">
+    <img src="2023_1.jpg">
+    <img src="2023_2.jpg">
+    <img src="2023_3.jpg">
+    <img src="2023_4.jpg">
+    <img src="2023_5.jpg">
+    <img src="2023_6.jpg">
+    <img src="2024.jpg">
+    <img src="2025_1.jpg">
+    <img src="2025_2.jpg">
+    <img src="2025_3.jpg">
+    <img src="2025_4.jpg">
+    <img src="2025_5.jpg">
+    <img src="2025_6.jpg">
+    <img src="2025_7.jpg">
+
+    <!-- дублируем для бесконечности -->
+    <img src="2019_1.jpg">
+    <img src="2019_2.jpg">
+    <img src="2019_3.jpg">
+    <img src="2020_1.jpg">
+    <img src="2020_2.jpg">
+    <img src="2020_3.jpg">
+    <img src="2021.jpg">
+    <img src="2022.jpg">
+    <img src="2023_1.jpg">
+    <img src="2023_2.jpg">
+    <img src="2023_3.jpg">
+    <img src="2023_4.jpg">
+    <img src="2023_5.jpg">
+    <img src="2023_6.jpg">
+    <img src="2024.jpg">
+    <img src="2025_1.jpg">
+    <img src="2025_2.jpg">
+    <img src="2025_3.jpg">
+    <img src="2025_4.jpg">
+    <img src="2025_5.jpg">
+    <img src="2025_6.jpg">
+    <img src="2025_7.jpg">
+  </div>
+</div>
+</div>
+
 <div class="card" id="photos">
     <h3> Мы Вас ждем!</h3>
     <div class="gallery">
@@ -1353,7 +1516,7 @@ body:not(.locked) .container {
   <h3>Наши гости🤍</h3>
   <ul id="guests"></ul>
 </div>
-
+    <div id="inviteTitle"></div>
 
 <footer>С любовью ❤️ Виталий и Дарья</footer>
 
@@ -1420,6 +1583,14 @@ lightbox.addEventListener("click", () => {
     lightbox.classList.remove("active");
 });
 
+
+/* Timeline lightbox */
+document.querySelectorAll(".photo-track img").forEach(img => {
+    img.addEventListener("click", () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add("active");
+    });
+});
 
 const music = document.getElementById("bgMusic");
 const btn = document.getElementById("musicBtn");
@@ -1589,7 +1760,13 @@ window.addEventListener("resize", updateMaxSlide);
 unlockBar.addEventListener("pointerdown", e => {
   isDragging = true;
   startX_unlock = e.clientX;
-  slider.style.transition = "none";
+
+  if (!playing) {
+    music.play();
+    fadeVolume(0, 1);
+    btn.classList.add("playing");
+    playing = true;
+  }
 });
 
 window.addEventListener("pointermove", e => {
@@ -1718,6 +1895,20 @@ function createGoldDust() {
     dust.appendChild(p);
   }
 }
+
+lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+        lightbox.classList.remove("active");
+    }
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        lightbox.classList.remove("active");
+    }
+});
+
+
 
 </script>
 
