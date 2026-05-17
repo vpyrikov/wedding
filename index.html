@@ -47,23 +47,95 @@ body {
     padding: 40px 20px 80px;
 }
 
-header {
-    padding: 90px 20px 40px;
+/* HERO HEADER */
+
+/* HERO HEADER */
+
+.hero { position: relative; padding: 70px 20px 45px; overflow: hidden; } @media (max-width: 600px) { .hero { padding: 60px 20px 35px; } } 
+/* мягкое свечение */
+.hero-blur { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 420px; height: 420px; background: radial-gradient( circle, rgba(194,181,155,.28), transparent 70% ); filter: blur(30px); z-index: 0; } 
+/* дата */ 
+.hero-date { position: relative; z-index: 2; display: inline-block; font-size: 12px; letter-spacing: .45em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; } 
+/* имена */ 
+.hero h1 { position: relative; z-index: 2; margin: 0; display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; font-family: "Playfair Display", serif; font-weight: 600; line-height: 1; } 
+/* Дарья / Виталий */ 
+.hero h1 span { font-size: clamp(54px, 9vw, 110px); background: linear-gradient( 180deg, #bfa58a 0%, #c9b197 45%, #d7c2ab 100% ); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 10px 24px rgba(120,90,60,.12); letter-spacing: .02em; } 
+body.dark.hero h1 span { background: linear-gradient( 180deg, #d8c2aa 0%, #c7a88a 100% ); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } 
+/* & */ 
+.hero h1 em { font-style: normal; font-size: clamp(26px, 4vw, 42px); color: var(--accent); opacity: .8; transform: translateY(6px); } 
+/* подпись */ 
+.hero-subtitle { position: relative; z-index: 2; margin-top: 12px; font-size: 14px; letter-spacing: .45em; text-transform: uppercase; color: var(--muted); opacity: .75; } /* линия */ .hero::after { content: ""; position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); width: 140px; height: 1px; background: linear-gradient( to right, transparent, var(--accent), transparent ); opacity: .7; }
+
+/* animation */
+.hero h1 span {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: heroReveal 1.4s cubic-bezier(.2,.8,.2,1) forwards;
 }
 
-header h1 {
-    font-family: "Playfair Display", serif;
-    font-size: 44px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    margin: 0;
+.hero h1 span:last-child {
+    animation-delay: .35s;
 }
 
-header h2 {
-    font-weight: 300;
-    font-size: 18px;
-    color: var(--muted);
-    margin-top: 14px;
+.hero h1 em {
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+    animation-delay: .8s;
+}
+
+.hero-subtitle,
+.hero-date {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 1s ease forwards;
+}
+
+.hero-date {
+    animation-delay: .2s;
+}
+
+.hero-subtitle {
+    animation-delay: 1s;
+}
+
+@keyframes heroReveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+
+    .hero {
+        padding: 120px 20px 70px;
+    }
+
+    .hero h1 {
+        gap: 12px;
+    }
+
+    .hero h1 span {
+        font-size: 56px;
+    }
+
+    .hero h1 em {
+        font-size: 24px;
+    }
+
+    .hero-subtitle {
+        letter-spacing: .3em;
+        font-size: 12px;
+    }
+
 }
 
 #inviteTitle {
@@ -219,10 +291,10 @@ li button:hover {
 /* Card animation */
 .card {
     opacity: 0;
-    transform: translateY(60px) scale(0.98);
+    transform: translateY(40px) scale(.98);
     transition:
-        opacity 1.2s cubic-bezier(.2,.8,.2,1),
-        transform 1.2s cubic-bezier(.2,.8,.2,1);
+        opacity .9s ease,
+        transform .9s cubic-bezier(.22,1,.36,1);
 }
 
 .card.visible {
@@ -243,10 +315,7 @@ pointer-events: none;
     z-index: 999;
 }
 
-#lightbox.active {
-    opacity: 1;
 
-}
 
 #lightbox img {
     max-width: 90%;
@@ -329,9 +398,11 @@ html {
     scroll-behavior: smooth;
 }
 .menu {
-    position: relative;
+    position: sticky;
+    top: 10px;
+    z-index: 50;
+
     border-radius: 28px;
-    top: 0;
     background: var(--bg);
     padding: 12px;
 }
@@ -365,9 +436,12 @@ footer {
 }
 
 
-.card:hover {
-    transform: translateY(-6px);
-    transition: transform .6s cubic-bezier(.2,.8,.2,1);
+.card {
+    will-change: transform;
+}
+
+.card.visible:hover {
+    transform: translateY(-6px) scale(1.01);
 }
 
 body::before {
@@ -520,11 +594,6 @@ body.dark .invite-card {
     box-shadow: 0 30px 60px rgba(0,0,0,.25);
 }
 
-.menu {
-    position: sticky;
-    top: 10px;
-    z-index: 50;
-}
 
 ::selection {
     background: var(--accent);
@@ -743,7 +812,7 @@ body.dark .rsvp-success {
 .childhood {
     position: relative;
     height: 450px;
-    margin-bottom: 120px;
+    margin-bottom: 50px;
     perspective: 1200px;
 }
 
@@ -754,11 +823,21 @@ body.dark .rsvp-success {
     left: 50%;
     top: 45%;
     transform: translate(-50%, -50%);
-    width: 260px;
-    height: 260px;
-    background: radial-gradient(circle, rgba(194,181,155,0.35), transparent 70%);
-    filter: blur(40px);
+    width: 220px;
+    height: 220px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(194,181,155,0.18),
+            transparent 72%
+        );
+
+    filter: blur(18px);
+
+    pointer-events: none;
 }
+
 
 /* Фото */
 .polaroid {
@@ -767,16 +846,46 @@ body.dark .rsvp-success {
     background: #fff;
     padding: 14px 14px 22px;
     border-radius: 12px;
-    box-shadow: 0 40px 80px rgba(0,0,0,.25);
+    box-shadow: 0 24px 50px rgba(0,0,0,.18);
+    overflow: hidden;
 
-    transform: translateY(80px) rotate(var(--rot)) scale(.9);
     opacity: 0;
 
+    transform:
+        translateY(180px)
+        scale(.6)
+        rotate(var(--rot))
+        rotateX(35deg);
+
+    filter:
+        blur(18px)
+        brightness(.7);
+
     transition:
-        transform 1.2s cubic-bezier(.2,.8,.2,1),
-        opacity 1s ease,
-        box-shadow .5s ease;
+        opacity 1.8s ease,
+        transform 2s cubic-bezier(.19,1,.22,1),
+        filter 2s ease,
+        box-shadow .8s ease;
+
+    will-change: transform, opacity, filter;
 }
+
+/* Появление */
+.polaroid.visible {
+    opacity: 1;
+
+    transform:
+        translateY(0)
+        scale(1)
+        rotate(var(--rot))
+        rotateX(0deg);
+
+    filter:
+        blur(0)
+        brightness(1);
+}
+
+
 
 /* Позиции */
 .polaroid.bride {
@@ -791,17 +900,74 @@ body.dark .rsvp-success {
     --rot: 12deg;
 }
 
-/* Появление */
-.polaroid.visible {
-    opacity: 1;
-    transform: translateY(0) rotate(var(--rot)) scale(1);
+.polaroid.visible::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent 20%,
+            rgba(255,255,255,.55) 50%,
+            transparent 80%
+        );
+
+    transform: translateX(-140%);
+    animation: photoShine 1.8s ease forwards;
+
+    pointer-events: none;
 }
 
-/* Hover (живость) */
-.polaroid:hover {
-    transform: translateY(-10px) rotate(0deg) scale(1.08);
-    box-shadow: 0 60px 120px rgba(0,0,0,.35);
+.polaroid.visible:hover {
+    transform:
+        translateY(-10px)
+        scale(1.03)
+        rotate(calc(var(--rot) * .7));
+
+    box-shadow: 0 70px 120px rgba(0,0,0,.35);
 }
+
+@keyframes photoShine {
+    to {
+        transform: translateX(140%);
+    }
+}
+
+.polaroid.visible {
+    animation:
+        photoFloat 6s ease-in-out infinite alternate;
+}
+
+@keyframes photoFloat {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: 0 -12px;
+    }
+}
+
+@keyframes floatPhoto {
+    0% {
+        transform:
+            translateY(0)
+            rotate(var(--rot))
+            scale(1);
+    }
+
+    100% {
+        transform:
+            translateY(-10px)
+            rotate(calc(var(--rot) * .6))
+            scale(1.015);
+    }
+}
+
 
 /* Фото */
 .polaroid img {
@@ -1047,10 +1213,6 @@ body.locked {
   user-select: none;
 }
 
-body.locked {
-  overflow: hidden;
-  height: 100vh;
-}
 
 /* полностью скрываем основной сайт до открытия */
 body.locked .container,
@@ -1125,55 +1287,7 @@ body:not(.locked) .container {
     border-radius: 24px;
 }
 
-.photo-track {
-    display: flex;
-    gap: 20px;
-    animation: scrollPhotos 35s linear infinite;
-}
 
-.photo-track img {
-    height: 260px;
-    border-radius: 22px;
-    object-fit: cover;
-    box-shadow: 0 30px 60px rgba(0,0,0,.35);
-}
-
-@keyframes scrollPhotos {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-.photo-track img {
-    cursor: pointer;
-    transition: transform .5s ease, box-shadow .5s ease;
-}
-
-.photo-track img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 30px 60px rgba(0,0,0,.3);
-}
-
-.photo-line:hover .photo-track {
-    animation-play-state: paused;
-}
-
-.photo-line {
-    position: relative;
-}
-
-.photo-line::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to right,
-        var(--bg),
-        transparent 20%,
-        transparent 80%,
-        var(--bg)
-    );
-    pointer-events: none;
-}
 
 #lightbox.active {
     opacity: 1;
@@ -1194,6 +1308,8 @@ body:not(.locked) .container {
     animation: zoomIn 0.4s ease;
     cursor: zoom-out; /* UX */
 }
+
+
 
 </style>
 
@@ -1247,8 +1363,20 @@ body:not(.locked) .container {
 </button>
 
 
-<header>
-    <h1>Дарья & Виталий</h1>
+<header class="hero">
+    
+    <div class="hero-blur"></div>
+
+
+    <h1>
+        <span>Дарья</span>
+        <em>&</em>
+        <span>Виталий</span>
+    </h1>
+
+    <p class="hero-subtitle">
+        Wedding Day
+    </p>
 
 </header>
 
@@ -1309,16 +1437,15 @@ body:not(.locked) .container {
   <a href="#plan">Программа</a>
   <a href="#cardwishes">Пожелания</a>
   <a href="#place">Локации</a>
-  <a href="#photos">Фото</a>
 </nav>
 
 
 <div class="card" id="plan">
     <h3>Программа</h3>
-    <div class="event"><span class="time">11:30</span>Сбор гостей</div>
-    <div class="event"><span class="time">12:00</span>Регистрация брака</div>
-    <div class="event"><span class="time">15:00</span>Ресторан (Родственники)</div>
-    <div class="event"><span class="time">18:00</span>Вечеринка (Друзья)</div>
+    <div class="event"><span class="time">11:40</span>Сбор гостей возле ЗАГСа</div>
+    <div class="event"><span class="time">12:00</span>Торжественная церемония</div>
+    <div class="event"><span class="time">15:00</span>Ресторан MAROON</div>
+    <div class="event"><span class="time">18:00</span>Коттедж в Дрокино</div>
 </div>
 
 <div class="card wishes" id="cardwishes">
@@ -1329,14 +1456,14 @@ body:not(.locked) .container {
       <p>Мы очень любим цветы (т.е невеста очень любит :)) Но через три дня мы улетаем в свадебное путешествие и не сможем насладиться их красотой💔 Поэтому у нас к вам огромная просьба не тратьтесь на букеты. Ваше присутствие лучший подарок.</p>
     </div>
     <div class="wish">
-       <p><b>Дресс-код:</b> <br>Нам важно, чтобы вы чувствовали себя комфортно, поэтому строгих правил нет. Приходите в чём вам удобно 🤍<br>
-	Но есть небольшое пожелание:<br>
-        <b>На регистрацию:</b> чуть более торжественный образ
+       <p><b>Дресс-код:</b> <br>Строгих правил нет, приходите в чём вам удобно 🤍<br>
+        <b>На регистрацию:</b> торжественный образ<br>
         <b>В коттедж:</b> лёгкий и свободный
 </p>
     </div>
     <div class="wish">
-      <p>Главное — возьмите с собой хорошее настроение!</p>
+      <p>Лучшая поддержка для нас - ваши искренние пожелания и лучезарные улыбки, <br> 
+остальное можно поместить в конверт</p>
     </div>
   </div>
 
@@ -1354,8 +1481,8 @@ body:not(.locked) .container {
 
 
 <div class="card" id="place">
-<h3> Место регистрации</h3>
-<p><b>ул. Крупской, 44</b></p>
+<h3> ЗАГС октябрьского района</h3>
+<p><b>Красноярск, ул. Крупской, 44</b></p>
     <img 
         src="imagesmir.jpg" 
         alt="Коттедж" 
@@ -1374,9 +1501,9 @@ body:not(.locked) .container {
 </div>
 
 
-<div class="card">
-<h3> Ресторан </h3>
-<p><b>​Дубровинского, 1а</b></p>
+<div class="card" id="restaurantCard">
+<h3> Ресторан MAROON </h3>
+<p><b>​Красноярск, Дубровинского, 1а</b></p>
     <img 
         src="imagesrest.jpg" 
         alt="Ресторан" 
@@ -1395,7 +1522,7 @@ body:not(.locked) .container {
 </div>
 </div>
 
-<div class="card">
+<div class="card" id="cottageCard">
     <h3> Коттедж </h3>
     <p><b> Дрокино </b></p>
 
@@ -1420,61 +1547,7 @@ body:not(.locked) .container {
 </div>
 
 
-<div class="card" id="photos1">
-    <h3> Наша история</h3>
-<div class="photo-line">
-  <div class="photo-track">
-    <img src="2019_1.jpg">
-    <img src="2019_2.jpg">
-    <img src="2019_3.jpg">
-    <img src="2020_1.jpg">
-    <img src="2020_2.jpg">
-    <img src="2020_3.jpg">
-    <img src="2021.jpg">
-    <img src="2022.jpg">
-    <img src="2023_1.jpg">
-    <img src="2023_2.jpg">
-    <img src="2023_3.jpg">
-    <img src="2023_4.jpg">
-    <img src="2023_5.jpg">
-    <img src="2023_6.jpg">
-    <img src="2024.jpg">
-    <img src="2025_1.jpg">
-    <img src="2025_2.jpg">
-    <img src="2025_3.jpg">
-    <img src="2025_4.jpg">
-    <img src="2025_5.jpg">
-    <img src="2025_6.jpg">
-    <img src="2025_7.jpg">
-
-    <!-- дублируем для бесконечности -->
-    <img src="2019_1.jpg">
-    <img src="2019_2.jpg">
-    <img src="2019_3.jpg">
-    <img src="2020_1.jpg">
-    <img src="2020_2.jpg">
-    <img src="2020_3.jpg">
-    <img src="2021.jpg">
-    <img src="2022.jpg">
-    <img src="2023_1.jpg">
-    <img src="2023_2.jpg">
-    <img src="2023_3.jpg">
-    <img src="2023_4.jpg">
-    <img src="2023_5.jpg">
-    <img src="2023_6.jpg">
-    <img src="2024.jpg">
-    <img src="2025_1.jpg">
-    <img src="2025_2.jpg">
-    <img src="2025_3.jpg">
-    <img src="2025_4.jpg">
-    <img src="2025_5.jpg">
-    <img src="2025_6.jpg">
-    <img src="2025_7.jpg">
-  </div>
-</div>
-</div>
-
-<div class="card" id="photos">
+<div class="card">
     <h3> Мы Вас ждем!</h3>
     <div class="gallery">
         <img src="images1.jpg">
@@ -1516,15 +1589,16 @@ body:not(.locked) .container {
   <h3>Наши гости🤍</h3>
   <ul id="guests"></ul>
 </div>
-    <div id="inviteTitle"></div>
 
-<footer>С любовью ❤️ Виталий и Дарья</footer>
+
+
 
 <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба%20Виталия%20и%20Дарьи&dates=20260620T050000Z/20260620T150000Z&details=Мы%20будем%20рады%20вас%20видеть&location=Красноярск"
 target="_blank" class="calendar-btn">
 Добавить в календарь 📅
 </a>
 
+<footer>С любовью ❤️ Виталий и Дарья</footer>
 
 <script>
 /* Timer */
@@ -1579,18 +1653,6 @@ document.querySelectorAll(".gallery img").forEach(img => {
     });
 });
 
-lightbox.addEventListener("click", () => {
-    lightbox.classList.remove("active");
-});
-
-
-/* Timeline lightbox */
-document.querySelectorAll(".photo-track img").forEach(img => {
-    img.addEventListener("click", () => {
-        lightboxImg.src = img.src;
-        lightbox.classList.add("active");
-    });
-});
 
 const music = document.getElementById("bgMusic");
 const btn = document.getElementById("musicBtn");
@@ -1657,18 +1719,6 @@ createGoldDust();
   }, 700);
 });
 
-function createGoldDust() {
-  const dust = document.getElementById("goldDust");
-  dust.innerHTML = "";
-
-  for (let i = 0; i < 18; i++) {
-    const p = document.createElement("span");
-    p.style.left = Math.random() * 100 + "%";
-    p.style.animationDuration = 6 + Math.random() * 6 + "s";
-    p.style.animationDelay = Math.random() * 2 + "s";
-    dust.appendChild(p);
-  }
-}
 
 
 const CSV_URL =
@@ -1908,7 +1958,42 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
+/* Guest versions */
+const guestType = new URLSearchParams(location.search).get("type");
 
+const restaurantCard = document.getElementById("restaurantCard");
+const cottageCard = document.getElementById("cottageCard");
+
+if (guestType === "family") {
+
+    // родственники — скрываем ресторан и коттедж
+    if (restaurantCard) restaurantCard.remove();
+    if (cottageCard) cottageCard.remove();
+
+    // программа
+    document.querySelectorAll("#plan .event").forEach(event => {
+        if (
+            event.innerText.includes("Ресторан") ||
+            event.innerText.includes("Коттедж")
+        ) {
+            event.remove();
+        }
+    });
+
+}
+
+if (guestType === "no-cottage") {
+
+    // скрываем только коттедж
+    if (cottageCard) cottageCard.remove();
+
+    document.querySelectorAll("#plan .event").forEach(event => {
+        if (event.innerText.includes("Коттедж")) {
+            event.remove();
+        }
+    });
+
+}
 
 </script>
 
