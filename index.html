@@ -57,9 +57,9 @@ body {
 /* дата */ 
 .hero-date { position: relative; z-index: 2; display: inline-block; font-size: 12px; letter-spacing: .45em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; } 
 /* имена */ 
-.hero h1 { position: relative; z-index: 2; margin: 0; display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; font-family: "Playfair Display", serif; font-weight: 600; line-height: 1; } 
+.hero h1 { position: relative; z-index: 2; margin: 0; display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; font-family: "Playfair Display", serif; font-weight: 600; line-height: 1.15; } 
 /* Дарья / Виталий */ 
-.hero h1 span { font-size: clamp(54px, 9vw, 110px); background: linear-gradient( 180deg, #bfa58a 0%, #c9b197 45%, #d7c2ab 100% ); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 10px 24px rgba(120,90,60,.12); letter-spacing: .02em; } 
+.hero h1 span { font-size: clamp(50px, 8vw, 95px); background: linear-gradient( 180deg, #bfa58a 0%, #c9b197 45%, #d7c2ab 100% ); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 10px 24px rgba(120,90,60,.12); letter-spacing: .02em; } 
 body.dark.hero h1 span { background: linear-gradient( 180deg, #d8c2aa 0%, #c7a88a 100% ); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } 
 /* & */ 
 .hero h1 em { font-style: normal; font-size: clamp(26px, 4vw, 42px); color: var(--accent); opacity: .8; transform: translateY(6px); } 
@@ -814,6 +814,7 @@ body.dark .rsvp-success {
     height: 450px;
     margin-bottom: 50px;
     perspective: 1200px;
+    top: -40px;
 }
 
 /* Glow */
@@ -837,7 +838,6 @@ body.dark .rsvp-success {
 
     pointer-events: none;
 }
-
 
 /* Фото */
 .polaroid {
@@ -869,6 +869,8 @@ body.dark .rsvp-success {
 
     will-change: transform, opacity, filter;
 }
+
+
 
 /* Появление */
 .polaroid.visible {
@@ -1457,7 +1459,7 @@ body:not(.locked) .container {
     </div>
     <div class="wish">
        <p><b>Дресс-код:</b> <br>Строгих правил нет, приходите в чём вам удобно 🤍<br>
-        <b>На регистрацию:</b> торжественный образ<br>
+        <b>На регистрацию:</b> торжественный образ
         <b>В коттедж:</b> лёгкий и свободный
 </p>
     </div>
@@ -1503,7 +1505,7 @@ body:not(.locked) .container {
 
 <div class="card" id="restaurantCard">
 <h3> Ресторан MAROON </h3>
-<p><b>​Красноярск, Дубровинского, 1а</b></p>
+<p><b>​Красноярск, ул. Дубровинского, 1а</b></p>
     <img 
         src="imagesrest.jpg" 
         alt="Ресторан" 
@@ -1524,7 +1526,7 @@ body:not(.locked) .container {
 
 <div class="card" id="cottageCard">
     <h3> Коттедж </h3>
-    <p><b> Дрокино </b></p>
+    <p><b> Красноярск, село Дрокино, Московская улица, 105 </b></p>
 
     <img 
         src="imagescottage.jpg" 
@@ -1534,11 +1536,11 @@ body:not(.locked) .container {
 
 <div class="map">
 <iframe 
-  src="https://yandex.ru/map-widget/v1/?text=посёлок%20Дрокино%20Красноярский%20край&z=13">
+  src="https://yandex.ru/map-widget/v1/?text=Красноярск%20село%20Дрокино%20Московская%20105&z=17">
 </iframe>
 
 <a class="route-btn"
-   href="https://yandex.ru/maps/?rtext=~Дрокино%20Красноярский%20край"
+   href="https://yandex.ru/maps/?rtext=~Красноярск%20село%20Дрокино%20Московская%20105"
    target="_blank">
    🚗 Построить маршрут
 </a>
@@ -1623,10 +1625,24 @@ function toggleTheme(){
 if(localStorage.getItem("theme")==="true")document.body.classList.add("dark");
 
 /* Personal invite */
-const p=new URLSearchParams(location.search).get("guest");
-if(p){
-    document.getElementById("name").value=p;
-    document.getElementById("inviteTitle").innerText=`Дорогой(ая) ${p}, ждём вас ❤️`;
+/* Personal invite */
+const p = new URLSearchParams(location.search).get("guest");
+
+if (p) {
+
+    const decodedName = decodeURIComponent(p);
+
+    const nameInput = document.getElementById("name");
+    const inviteTitle = document.getElementById("inviteTitle");
+
+    if (nameInput) {
+        nameInput.value = decodedName;
+    }
+
+    if (inviteTitle) {
+        inviteTitle.innerText = `Дорогой(ая) ${decodedName}, ждём вас ❤️`;
+    }
+
 }
 /* Card reveal on scroll */
 const cards = document.querySelectorAll(".card");
