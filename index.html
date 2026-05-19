@@ -51,7 +51,7 @@ body {
 
 /* HERO HEADER */
 
-.hero { position: relative; padding: 70px 20px 45px; overflow: hidden; } @media (max-width: 600px) { .hero { padding: 60px 20px 35px; } } 
+.hero { position: relative; padding: 50px 20px 45px; overflow: hidden; } @media (max-width: 600px) { .hero { padding: 60px 20px 35px; } } 
 /* мягкое свечение */
 .hero-blur { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 420px; height: 420px; background: radial-gradient( circle, rgba(194,181,155,.28), transparent 70% ); filter: blur(30px); z-index: 0; } 
 /* дата */ 
@@ -1161,7 +1161,7 @@ body.dark .unlock {
 /* FIX WISHES MOBILE */
 .wishes-slider {
   position: relative;
-  min-height: 140px;
+  min-height: 220px;
   overflow: hidden;
 }
 
@@ -1459,13 +1459,13 @@ body:not(.locked) .container {
     </div>
     <div class="wish">
        <p><b>Дресс-код:</b> <br>Строгих правил нет, приходите в чём вам удобно 🤍<br>
-        <b>На регистрацию:</b> торжественный образ
-        <b>В коттедж:</b> лёгкий и свободный
+        <b>На регистрацию:</b> торжественный образ <br>
+	<b>В коттедж:</b> лёгкий и свободный
 </p>
     </div>
     <div class="wish">
       <p>Лучшая поддержка для нас - ваши искренние пожелания и лучезарные улыбки, <br> 
-остальное можно поместить в конверт</p>
+остальное можно поместить в конверт🧧</p>
     </div>
   </div>
 
@@ -1786,10 +1786,9 @@ const nameEl  = document.getElementById("inviteName");
 const guestName = new URLSearchParams(location.search).get("guest");
 
 if (guestName) {
-    const prefix = guestName.endsWith("а") ? "Дорогая" : "Дорогой";
-    nameEl.textContent = `${prefix} ${guestName}`;
+    nameEl.textContent = `${guestName}`;
 } else {
-    nameEl.textContent = "Уважаемый(ая) гость!";
+    nameEl.textContent = "Уважаемый гость!";
 }
 
 overlay.classList.add("active");
@@ -1982,16 +1981,13 @@ const cottageCard = document.getElementById("cottageCard");
 
 if (guestType === "family") {
 
-    // родственники — скрываем ресторан и коттедж
+    // родственники — скрываем ресторан
     if (restaurantCard) restaurantCard.remove();
-    if (cottageCard) cottageCard.remove();
 
     // программа
     document.querySelectorAll("#plan .event").forEach(event => {
         if (
-            event.innerText.includes("Ресторан") ||
-            event.innerText.includes("Коттедж")
-        ) {
+            event.innerText.includes("Ресторан")) {
             event.remove();
         }
     });
